@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oss-vuln-digger"
+version = "0.1.0"
+description = "Extensible OSS vulnerability research tool"
+readme = "README.md"
+requires-python = ">=3.12"
+
+[project.scripts]
+ovd = "oss_vuln_digger.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

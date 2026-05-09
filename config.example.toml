@@ -1,0 +1,13 @@
+[app]
+runs_dir = ".ovd_runs"
+corpus_dir = "corpus"
+enabled_validators = ["docker_build", "sanitizer_runtime"]
+
+[llm]
+provider = "local"
+base_url = ""
+api_key_env = "OPENAI_API_KEY"
+model = "local-heuristic"
+temperature = 0.0
+max_tokens = 1200
+timeout_seconds = 30

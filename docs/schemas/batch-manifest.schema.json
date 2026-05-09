@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oss-vuln-digger.local/schemas/batch-manifest.schema.json",
+  "title": "oss-vuln-digger Batch Manifest",
+  "type": "object",
+  "required": ["name", "jobs"],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/job"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "job": {
+      "type": "object",
+      "required": ["name", "mode", "target"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["scan", "replay_cve", "replay_manifest"]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cve_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manifest": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "replay_cve"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["cve_id"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "replay_manifest"
+              }
+            },
+            "required": ["mode"]
+          },
+          "then": {
+            "required": ["manifest"]
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  }
+}
