@@ -49,6 +49,38 @@ Create a Decision Record before implementation when changing:
 
 Do not put roadmap items into specs. Do not put active backlog into roadmap. Do not duplicate schema semantics across README and specs. README may link to contracts, but `docs/specs/` owns system semantics and `docs/schemas/` owns machine-checkable format shape.
 
+## Review Agent Gate
+Use a Review Agent as a development quality gate, not as a runtime vulnerability-mining component. See `docs/decisions/0005-review-agent-development-gate.md`.
+
+Run a Review Agent pass before:
+
+- creating or moving a release tag
+- merging or committing `L` changes
+- changing execution-safety boundaries
+- changing validator status semantics
+- changing persisted schema, report, manifest, or result semantics
+- adding or changing engine, adapter, validator, provider, or corpus strategy
+- introducing fuzzing, static-analysis, binary-analysis, or exploit-replay engines
+- adding remote workers, queues, sync, or networked execution behavior
+
+The Review Agent must check:
+
+- relevant `docs/specs/` files were read and updated when behavior, contracts, or safety changed
+- relevant Decision Records exist for high-impact choices
+- execution-safety constraints still hold
+- candidate, hypothesis, evidence, validation, and confirmed-vulnerability semantics are preserved
+- safety-sensitive changes include negative tests or fixture-driven checks
+- `README.md`, `ROADMAP.md`, `TASKS.md`, specs, and schemas do not overclaim current capability
+- architecture remains local-first and avoids premature runtime multi-agent orchestration
+
+The Review Agent must not:
+
+- mark findings as confirmed vulnerabilities
+- execute untrusted PoCs or replay commands
+- bypass validators, execution-safety checks, or human approval
+- rewrite source-of-truth run artifacts into stronger claims than the evidence supports
+- replace the human final decision for release or tag approval
+
 ## Change Sizing
 Classify work before implementing:
 
@@ -73,6 +105,7 @@ Create a Decision Record when you change:
 - validator status semantics
 - language-adapter strategy
 - security-sensitive workflow boundaries
+- AI-native review or release-gate governance
 
 Use `docs/decisions/0000-template.md` as the template.
 

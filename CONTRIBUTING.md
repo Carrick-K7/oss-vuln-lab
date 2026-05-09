@@ -51,6 +51,25 @@ Update specs before implementation when changing:
 
 Use `docs/schemas/` for stable machine-checkable manifest formats. Do not duplicate schema field meaning in README; README should link to the relevant spec and schema.
 
+## Review Gate
+
+Use a Review Agent as a development quality gate for high-risk work. It is a review role, not a runtime vulnerability-mining component.
+
+Run the Review Agent gate before:
+
+- creating or moving a release tag
+- merging or committing `L` changes
+- changing execution-safety boundaries
+- changing validator status semantics
+- changing persisted schema, report, manifest, or result semantics
+- adding or changing engine, adapter, validator, provider, or corpus strategy
+- introducing fuzzing, static-analysis, binary-analysis, or exploit-replay engines
+- adding remote workers, queues, sync, or networked execution behavior
+
+The review must check spec alignment, Decision Record coverage, safety boundaries, data/status semantics, negative-test coverage for safety-sensitive changes, documentation honesty, and architectural restraint.
+
+The Review Agent must not confirm vulnerabilities, execute untrusted PoCs, bypass validators or human approval, or replace the human release decision.
+
 ## Validation
 
 Before finalizing a change, run the smallest useful validation set. At minimum:
