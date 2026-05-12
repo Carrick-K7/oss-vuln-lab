@@ -68,6 +68,8 @@ A corpus record describes a known vulnerability or advisory replay target. It ma
 
 Corpus manifests are local research inputs. They must not contain sensitive undisclosed details unless the repository is intentionally private and governed by `SECURITY.md`.
 
+Corpus manifest 也是当前 advisory 和 affected-version 元数据的归属位置。当前架构不包含数据库型 knowledge store。引入数据库必须先新增 Decision Record，并且不得替代 corpus manifest 或 run artifact 的 source-of-truth 地位。
+
 ## Batch Semantics
 
 A batch result is an orchestration artifact. It summarizes job outcomes, points to underlying run ids and may compute deduplication or regression comparison metadata. It is not the canonical source for individual finding evidence.
@@ -80,6 +82,7 @@ Schedule state records local execution timing and last batch ids. It is not a du
 
 - `run.json` is the canonical source for one scan or replay run.
 - `report.json`, `report.md` and dashboard output are views over run data.
+- `corpus/` manifest 是 curated advisory、version-range 和 replay 元数据的本地 canonical source。
 - Batch results summarize job outcomes and reference run ids; they do not replace underlying runs.
 - Schedule state records timing and last batch ids; it does not replace batch results.
 - JSON Schema files under `docs/schemas/` are reference contracts for stable manifest shapes. Runtime validation may be implemented with hand-written validation code unless a future Decision Record makes schema validation mandatory.
