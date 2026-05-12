@@ -46,4 +46,4 @@
 - 更新默认 validator 配置。
 - 增加 artifact name 安全校验。
 - 为 triage mutation 写入显式记录。
-- 更新 README、TASKS 和测试。
+- 更新 README 和测试。

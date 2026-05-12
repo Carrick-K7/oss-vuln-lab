@@ -2,6 +2,7 @@
 
 - Status: accepted
 - Date: 2026-05-09
+- Amended by: `docs/decisions/0007-task-backlog-and-doc-refresh-gate.md`
 
 ## Context
 
@@ -26,10 +27,11 @@
 - `CONTRIBUTING.md`: 人类协作流程。
 - `SECURITY.md`: 漏洞披露、敏感材料和仓库边界。
 - `ROADMAP.md`: 长期方向，不作为任务列表。
-- `TASKS.md`: 当前本地 backlog，保持短小。
 - `docs/decisions/`: 已接受的高影响决策，回答“为什么”。
 - `docs/specs/`: 当前系统契约，回答“必须满足什么”。
 - `docs/schemas/`: 稳定机器格式的 JSON Schema，回答“如何校验”。
+
+`TASKS.md` was later removed by `docs/decisions/0007-task-backlog-and-doc-refresh-gate.md`. 短期执行意图不再进入长期文档体系；当前规则以 `AGENTS.md` 为准。
 
 核心 Spec 固定为：
 
@@ -48,7 +50,7 @@ AI 执行开发时必须先分类变更规模：
 执行门禁：
 
 - `S`: 可以直接实现，但最终回答必须说明验证方式。
-- `M`: 先检查相关 Spec，必要时更新 `TASKS.md` 和相关 Spec，再实现。
+- `M`: 先检查相关 Spec，必要时更新相关 Spec，再实现。
 - `L`: 先写 Decision Record，再更新相关 Spec，然后拆分实现。
 
 下列变化必须先更新 `docs/specs/`，再实现：

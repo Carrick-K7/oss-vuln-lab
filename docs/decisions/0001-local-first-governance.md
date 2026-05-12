@@ -2,6 +2,7 @@
 
 - Status: accepted
 - Date: 2026-04-18
+- Amended by: `docs/decisions/0007-task-backlog-and-doc-refresh-gate.md`
 
 ## Context
 
@@ -13,10 +14,11 @@ Use a local-first process with four persistent layers:
 
 - `README.md` for stable project facts
 - `ROADMAP.md` for long-term direction
-- `TASKS.md` for the active local backlog
 - `docs/decisions/` for high-impact technical decisions
 
 Use `Decision Records` as the term instead of `ADR`. Store them as numbered Markdown files under `docs/decisions/` using a `0000-` style filename prefix.
+
+`TASKS.md` was later removed by `docs/decisions/0007-task-backlog-and-doc-refresh-gate.md`. Near-term execution now lives in the current working context and git history, not in a dedicated backlog file.
 
 ## Consequences
 
@@ -27,6 +29,5 @@ Use `Decision Records` as the term instead of `ADR`. Store them as numbered Mark
 
 ## Follow-up
 
-- Keep `TASKS.md` short and current
 - Add a new Decision Record whenever CLI, schema, validator semantics, replay manifest shape, or security boundaries change materially
 - Revisit whether GitHub becomes the execution source of truth only after the local process feels stable and safe

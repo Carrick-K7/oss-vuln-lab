@@ -1,11 +1,11 @@
 # Contributing
 
-This project currently runs local-first. Git history is the execution log, `TASKS.md` is an optional short-lived active backlog, `docs/specs/` records current system contracts, and `docs/decisions/` records larger technical choices.
+This project currently runs local-first. Git history is the execution log, `docs/specs/` records current system contracts, and `docs/decisions/` records larger technical choices.
 
 ## Working Style
 
 - Small changes can go straight to implementation and commit
-- Medium changes should check and update relevant specs before implementation, then update `TASKS.md` only when they affect active priorities
+- Medium changes should check and update relevant specs before implementation
 - Larger or riskier changes should be written down as a Decision Record before implementation, then implemented in smaller steps
 
 Use the following rough sizing:
@@ -60,7 +60,6 @@ After code or behavior changes, check whether documentation must be refreshed:
 - update `docs/schemas/` and examples for manifest or stable machine-format changes
 - update `docs/specs/0004-execution-safety.md` or `SECURITY.md` for security-boundary changes
 - update `ROADMAP.md` only for long-term direction changes
-- update `TASKS.md` only for active local backlog changes
 - add a Decision Record for high-impact or compatibility-sensitive choices
 
 If no docs require changes, say that explicitly in the change summary.

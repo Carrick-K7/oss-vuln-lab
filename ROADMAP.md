@@ -1,6 +1,6 @@
 # Roadmap
 
-`oss-vuln-digger` is evolving toward a local-first OSS vulnerability research and verification platform. This file records the long-term direction only. Near-term execution lives in `TASKS.md`, and high-impact technical choices live in `docs/decisions/`.
+`oss-vuln-digger` is evolving toward a local-first OSS vulnerability research and verification platform. This file records the long-term direction only. Near-term execution lives in the current working context and git history, and high-impact technical choices live in `docs/decisions/`.
 
 The current `0.1.0` line is the local MVP baseline for engineering open source vulnerability research. The codebase already contains early UI, batch, and schedule capabilities, but the `1.x` labels below are maturity targets, not claims that the full stable platform is complete.
 

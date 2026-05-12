@@ -37,7 +37,7 @@ The Review Agent must check:
 - execution-safety constraints still hold
 - candidate, hypothesis, evidence, validation, and confirmed-vulnerability semantics are preserved
 - safety-sensitive changes include negative tests or fixture-driven checks
-- `README.md`, `ROADMAP.md`, `TASKS.md`, specs, and schemas do not overclaim current capability
+- `README.md`, `ROADMAP.md`, specs, and schemas do not overclaim current capability
 - architecture remains local-first and avoids premature runtime multi-agent orchestration
 
 The Review Agent must not:
