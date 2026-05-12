@@ -1,4 +1,6 @@
 import json
+import base64
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,6 +11,21 @@ from oss_vuln_digger.corpus import CorpusStore, CorpusValidationError
 
 
 class CorpusTests(unittest.TestCase):
+    def test_repository_real_cve_manifest_loads(self) -> None:
+        record = CorpusStore("corpus").load_record("CVE-2022-3598")
+
+        self.assertEqual(record.project, "libtiff")
+        self.assertEqual(record.language.value, "c_cpp")
+        self.assertEqual(record.vuln_family, "memory_safety")
+        self.assertEqual(record.affected_versions, ["through 4.4.0"])
+        self.assertIn("tools/tiffcrop.c", record.replay.candidate_file)
+        self.assertEqual(record.replay.candidate_line, 3604)
+        self.assertIn("tiffcrop -Z 1:4,3:3", record.replay.repro_command)
+        self.assertEqual(record.replay.artifacts[0].name, "cve-2022-3598-poc.tiff")
+        payload = record.replay.artifacts[0].content.encode("ascii")
+        digest = hashlib.sha256(base64.b64decode(payload)).hexdigest()
+        self.assertEqual(digest, "28838a198cb8e5ebadcf624e0404fb36894845ad833edc23ca721c4c612bd630")
+
     def test_loads_manifest_and_materializes_relative_artifact(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

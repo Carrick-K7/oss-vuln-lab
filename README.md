@@ -31,7 +31,7 @@ The release trajectory is:
 - Builtin vulnerability families for memory safety, boundary validation, command execution, path traversal, deserialization, SQL injection, SSRF, XXE, template injection, and binary risky-symbol surfacing
 - Local heuristic analysis by default, plus OpenAI-compatible provider hooks
 - Validator backends for Docker build prep, sanitizer runtime checks, host sanitizer runs, and direct runtime replay
-- Local CVE corpus manifests and `replay` commands for known-PoC verification
+- Local CVE corpus manifests and `replay` commands for known-PoC verification, including a LibTIFF CVE-2022-3598 replay
 - Static local dashboard generation and optional local HTTP serving with inline finding, evidence, corpus, and batch review
 - Batch and scheduled local execution for scan and replay workloads with deduplication and regression comparison
 - JSON and Markdown run reports under a per-run artifacts directory
@@ -68,9 +68,9 @@ Corpus and replay commands:
 
 ```bash
 python3 -m oss_vuln_digger corpus list
-python3 -m oss_vuln_digger corpus show CVE-2099-0001
-python3 -m oss_vuln_digger replay cve /path/to/project CVE-2099-0001
-python3 -m oss_vuln_digger replay manifest /path/to/project ./corpus/CVE-2099-0001.json
+python3 -m oss_vuln_digger corpus show CVE-2022-3598
+python3 -m oss_vuln_digger replay cve /path/to/libtiff-4.4.0 CVE-2022-3598
+python3 -m oss_vuln_digger replay manifest /path/to/libtiff-4.4.0 ./corpus/CVE-2022-3598.json
 ```
 
 The installed console script is also available as:
@@ -190,6 +190,24 @@ Example:
 }
 ```
 
+## Included CVE Replay
+
+The repository includes `corpus/CVE-2022-3598.json`, a public LibTIFF 4.4.0 `tiffcrop` replay for an out-of-bounds write in `extractContigSamplesShifted24bits`. Fetch the vulnerable target source with:
+
+```bash
+target="$(bash scripts/fetch_libtiff_4_4_0_fixture.sh)"
+```
+
+Then replay the corpus record. The host config is explicit opt-in for local target execution:
+
+```bash
+python3 -m oss_vuln_digger \
+  --config config.host.example.toml \
+  replay cve "$target" CVE-2022-3598
+```
+
+Successful validation records sanitizer or crash evidence as `confirmed_known_poc`.
+
 ## Local Dashboard
 
 `ui build` writes a static dashboard under `<runs_dir>/dashboard/index.html` by default. The dashboard summarizes:
@@ -293,6 +311,12 @@ Fetch the official LibTIFF 4.3.0 release bundle with:
 
 ```bash
 bash scripts/fetch_libtiff_fixture.sh
+```
+
+Fetch the official LibTIFF 4.4.0 release bundle used for CVE-2022-3598 replay with:
+
+```bash
+bash scripts/fetch_libtiff_4_4_0_fixture.sh
 ```
 
 Fetch the FFmpeg 7.1.1 source bundle used for known-PoC replay with:
