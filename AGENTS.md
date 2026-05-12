@@ -11,13 +11,13 @@ Use these layers:
 - `README.md` for stable project facts
 - `AGENTS.md` for AI/developer execution rules
 - `ROADMAP.md` for long-term direction only
-- `TASKS.md` for the active local backlog
+- `TASKS.md` for an optional short-lived active local backlog, not a source of truth
 - `docs/decisions/` for numbered Decision Records
 - `docs/specs/` for current system contracts
 - `docs/schemas/` for stable machine-checkable manifest contracts
 - `git commit` for the execution log
 
-Do not turn `ROADMAP.md` into a task tracker. Keep `TASKS.md` short.
+Do not turn `ROADMAP.md` into a task tracker. Keep `TASKS.md` short. Do not use `TASKS.md` to define product facts, behavior, compatibility, architecture, release history, or security boundaries; those belong in README, specs, decisions, schemas, and git history.
 
 ## AI-Native Spec-Driven Change Gate
 本项目主要由 AI 主导或辅助开发。实现前不要只依赖最近对话上下文，必须按下面顺序执行：
@@ -27,7 +27,8 @@ Do not turn `ROADMAP.md` into a task tracker. Keep `TASKS.md` short.
 3. Update the relevant Spec before implementation when the change affects behavior, semantics, contracts, or safety boundaries.
 4. Create a new Decision Record before implementation when the change affects long-term direction, persisted compatibility, schema strategy, validator status semantics, engine strategy, or security-sensitive boundaries.
 5. Implement in small steps and run the smallest useful validation set.
-6. In the final response, state which docs/specs were updated and which validation was run.
+6. Run the documentation impact check before finalizing.
+7. In the final response, state which docs/specs were updated, or state that no docs required changes, and state which validation was run.
 
 Update `docs/specs/` before implementation when changing:
 
@@ -48,6 +49,19 @@ Create a Decision Record before implementation when changing:
 - long-term documentation governance
 
 Do not put roadmap items into specs. Do not put active backlog into roadmap. Do not duplicate schema semantics across README and specs. README may link to contracts, but `docs/specs/` owns system semantics and `docs/schemas/` owns machine-checkable format shape.
+
+## Documentation Impact Check
+After any code or behavior change, check whether documentation must be refreshed before finalizing:
+
+- CLI, config, install path, command output, or current capability changed: update `README.md`.
+- Workflow, status, evidence, report, run, corpus, batch, schedule, or finding semantics changed: update the relevant files under `docs/specs/`.
+- Manifest shape or stable machine-checkable format changed: update `docs/schemas/` and related examples.
+- Security boundary changed, including PoC execution, host execution, Docker, network access, artifact materialization, or sensitive data handling: update `docs/specs/0004-execution-safety.md` and, if needed, `SECURITY.md`.
+- Long-term direction changed: update `ROADMAP.md`.
+- Active local backlog changed: update `TASKS.md`.
+- High-impact or compatibility-sensitive decision changed: add or update a Decision Record under `docs/decisions/`.
+
+If no documentation changes are needed, explicitly say so in the final response. Do not leave docs stale just because tests pass.
 
 ## Review Agent Gate
 Use a Review Agent as a development quality gate, not as a runtime vulnerability-mining component. See `docs/decisions/0005-review-agent-development-gate.md`.
@@ -91,8 +105,8 @@ Classify work before implementing:
 Default behavior:
 
 - `S`: implement, test, commit
-- `M`: reflect the work in `TASKS.md`, then implement, test, commit
-- `L`: write a Decision Record first, then implement in smaller steps
+- `M`: update `TASKS.md` only if the active local backlog changes, then implement, test, commit
+- `L`: write a Decision Record first, update relevant specs or docs, then implement in smaller steps
 
 ## Decision Records
 Use `Decision Records` instead of `ADR` as the working term. Store them in `docs/decisions/` with `0000-` style prefixes.
@@ -105,7 +119,7 @@ Create a Decision Record when you change:
 - validator status semantics
 - language-adapter strategy
 - security-sensitive workflow boundaries
-- AI-native review or release-gate governance
+- AI-native review, release-gate governance, or documentation governance
 
 Use `docs/decisions/0000-template.md` as the template.
 
@@ -119,7 +133,7 @@ Use the current documented entrypoints and keep them stable:
 - `python3 -m oss_vuln_digger ui build` and `python3 -m oss_vuln_digger ui serve` operate the local dashboard
 - `python3 -m oss_vuln_digger batch run ./batch.json` and `python3 -m oss_vuln_digger schedule once ./schedule.json` drive local automation
 
-If you add or change executable flows, document them in `README.md` and update `TASKS.md` or a Decision Record as needed.
+If you add or change executable flows, document them in `README.md` and update relevant specs, schemas, `TASKS.md`, or a Decision Record as needed.
 
 ## Coding Style & Naming Conventions
 Use Python 3.12-compatible code, 4-space indentation, `snake_case` for modules/functions, and `PascalCase` for classes. Favor small focused modules and explicit dataclasses over ad hoc dictionaries when data crosses subsystem boundaries. Extend the plugin-oriented design instead of hardcoding language- or validator-specific branches into the CLI.
@@ -128,7 +142,7 @@ Use Python 3.12-compatible code, 4-space indentation, `snake_case` for modules/f
 Add or update tests with every behavior change. Prefer deterministic unit and small fixture-driven integration tests that avoid network access. Mirror source concerns with focused files such as `tests/test_pipeline.py`, `tests/test_cli.py`, `tests/test_registry.py`, `tests/test_corpus.py`, and `tests/test_replay.py`. Use temporary directories for generated projects, runs, and payloads.
 
 ## Documentation Expectations
-Keep `README.md` accurate for the shipped CLI and configuration shape. Update `ROADMAP.md` only when long-term direction changes. Update `TASKS.md` when active priorities change. Keep `docs/specs/` accurate for current system contracts. Keep `docs/schemas/` accurate for stable manifest contracts. When changing config keys, command names, report schema, or corpus manifest shape, update the relevant examples and contract docs in the same change.
+Keep `README.md` accurate for the shipped CLI and configuration shape. Update `ROADMAP.md` only when long-term direction changes. Update `TASKS.md` only when active local priorities change. Keep `docs/specs/` accurate for current system contracts. Keep `docs/schemas/` accurate for stable manifest contracts. When changing config keys, command names, report schema, or corpus manifest shape, update the relevant examples and contract docs in the same change.
 
 ## Security & Configuration Tips
 Never commit secrets, API keys, downloaded vulnerability feeds, generated run artifacts, or sensitive PoC corpora. Treat imported PoCs and replay commands as untrusted input. Read `SECURITY.md` before adding fixtures or writing up vulnerability details, and keep undisclosed or target-specific work outside this repository.

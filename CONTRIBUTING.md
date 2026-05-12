@@ -1,11 +1,11 @@
 # Contributing
 
-This project currently runs local-first. Git history is the execution log, `TASKS.md` is the active backlog, `docs/specs/` records current system contracts, and `docs/decisions/` records larger technical choices.
+This project currently runs local-first. Git history is the execution log, `TASKS.md` is an optional short-lived active backlog, `docs/specs/` records current system contracts, and `docs/decisions/` records larger technical choices.
 
 ## Working Style
 
 - Small changes can go straight to implementation and commit
-- Medium changes should check and update relevant specs before implementation, then be reflected in `TASKS.md` when they affect active priorities
+- Medium changes should check and update relevant specs before implementation, then update `TASKS.md` only when they affect active priorities
 - Larger or riskier changes should be written down as a Decision Record before implementation, then implemented in smaller steps
 
 Use the following rough sizing:
@@ -50,6 +50,20 @@ Update specs before implementation when changing:
 - adapter, vulnerability family, validator, provider, or future engine contracts
 
 Use `docs/schemas/` for stable machine-checkable manifest formats. Do not duplicate schema field meaning in README; README should link to the relevant spec and schema.
+
+## Documentation Check
+
+After code or behavior changes, check whether documentation must be refreshed:
+
+- update `README.md` for CLI, config, command output, install path, or current capability changes
+- update `docs/specs/` for workflow, status, evidence, report, run, corpus, batch, schedule, or finding semantic changes
+- update `docs/schemas/` and examples for manifest or stable machine-format changes
+- update `docs/specs/0004-execution-safety.md` or `SECURITY.md` for security-boundary changes
+- update `ROADMAP.md` only for long-term direction changes
+- update `TASKS.md` only for active local backlog changes
+- add a Decision Record for high-impact or compatibility-sensitive choices
+
+If no docs require changes, say that explicitly in the change summary.
 
 ## Review Gate
 

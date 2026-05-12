@@ -18,7 +18,7 @@ The release trajectory is:
 - `CONTRIBUTING.md`: 人类协作流程
 - `SECURITY.md`: 漏洞披露、敏感材料和仓库边界
 - `ROADMAP.md`: 长期方向，不作为任务列表
-- `TASKS.md`: 当前本地 backlog，保持短小
+- `TASKS.md`: 可选的短期本地 backlog，不作为 source of truth
 - `docs/decisions/`: 已接受的高影响决策，回答“为什么”
 - `docs/specs/`: 当前系统契约，回答“必须满足什么”
 - `docs/schemas/`: 稳定机器格式的 JSON Schema，回答“如何校验”
