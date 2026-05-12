@@ -26,6 +26,22 @@ class CorpusTests(unittest.TestCase):
         digest = hashlib.sha256(base64.b64decode(payload)).hexdigest()
         self.assertEqual(digest, "28838a198cb8e5ebadcf624e0404fb36894845ad833edc23ca721c4c612bd630")
 
+    def test_repository_recent_python_cve_manifest_loads(self) -> None:
+        record = CorpusStore("corpus").load_record("CVE-2025-4565")
+
+        self.assertEqual(record.project, "protobuf")
+        self.assertEqual(record.language.value, "python")
+        self.assertEqual(record.vuln_family, "deserialization")
+        self.assertEqual(
+            record.affected_versions,
+            ["<4.25.8", ">=5.26.0,<5.29.5", ">=6.30.0,<6.31.1"],
+        )
+        self.assertIn("google/protobuf/internal/decoder.py", record.replay.candidate_file)
+        self.assertIn("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python", record.replay.repro_command)
+        self.assertEqual(record.replay.artifacts[0].name, "cve-2025-4565-replay.py")
+        digest = hashlib.sha256(record.replay.artifacts[0].content.encode("utf-8")).hexdigest()
+        self.assertEqual(digest, "23ea0174b86c4a20611e8a36f0d49207e0ad7d7ab0be54768e62eb69042378c3")
+
     def test_loads_manifest_and_materializes_relative_artifact(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
