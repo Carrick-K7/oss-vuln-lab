@@ -180,31 +180,8 @@ Local corpus rules:
 - `replay.artifacts[*].file_path` must stay relative to the manifest directory
 - malformed records fail fast in `corpus` and `replay` commands with a user-facing error
 
-Example:
-
-```json
-{
-  "cve_id": "CVE-2099-0001",
-  "summary": "Demo replay",
-  "project": "demo-app",
-  "language": "python",
-  "vuln_family": "command_execution",
-  "references": ["https://example.invalid/CVE-2099-0001"],
-  "replay": {
-    "title": "Demo replay",
-    "vuln_family": "command_execution",
-    "repro_command": "python3 app.py @payload_path@",
-    "candidate_file": "app.py",
-    "function_or_sink": "__main__",
-    "artifacts": [
-      {
-        "name": "payload.txt",
-        "file_path": "payload.txt"
-      }
-    ]
-  }
-}
-```
+Real examples are committed under `corpus/`, including
+`corpus/CVE-2022-3598.json` and `corpus/CVE-2025-4565.json`.
 
 ## Included CVE Replays
 
@@ -258,51 +235,20 @@ Contract references:
 - Report schema: [docs/schemas/impact-report.schema.json](./docs/schemas/impact-report.schema.json)
 - Decision: [docs/decisions/0008-version-impact-assessment.md](./docs/decisions/0008-version-impact-assessment.md)
 
-Example manifest:
+The committed real impact example is
+`examples/impact/protobuf-cve-2025-4565.json`. It assesses protobuf
+`5.29.4` and `5.29.5` using the public `CVE-2025-4565` corpus replay and source
+signatures for the upstream recursion-depth fix.
 
-```json
-{
-  "schema_version": "0.1",
-  "name": "demo-impact",
-  "advisory": {
-    "id": "CVE-2099-2000",
-    "project": "demo",
-    "summary": "Demo version impact assessment",
-    "vuln_family": "command_execution",
-    "source_hints": [
-      {"file": "app.py", "function_or_sink": "__main__"}
-    ]
-  },
-  "version_source": {
-    "type": "git",
-    "repository": "/path/to/demo.git",
-    "explicit": [
-      {"version": "1.0.0", "ref": "v1.0.0", "role": "suspected_affected"},
-      {"version": "1.0.1", "ref": "v1.0.1", "role": "fixed_control"}
-    ],
-    "discover": {
-      "enabled": true,
-      "include": ["v1.*"],
-      "exclude": ["*rc*", "*beta*"],
-      "limit": 20
-    }
-  },
-  "replay": {"corpus_ref": "CVE-2099-2000"},
-  "intelligence": {
-    "enabled": false,
-    "queries": ["CVE-2099-2000 demo PoC"],
-    "max_results": 10
-  },
-  "source_signatures": [
-    {
-      "name": "vulnerable-marker",
-      "classification": "vulnerable",
-      "file": "app.py",
-      "contains_all": ["VULNERABLE_MARKER"]
-    }
-  ]
-}
+To run the real example, fetch the PyPI source distributions, build a local Git
+repo with tags `v5.29.4` and `v5.29.5`, and execute impact assessment:
+
+```bash
+bash scripts/run_protobuf_cve_2025_4565_impact.sh
 ```
+
+The script verifies the PyPI source archive hashes before importing them. It
+uses `config.host.example.toml`, so host-side target execution is explicit.
 
 Impact statuses are separate from finding statuses. `confirmed_affected`
 requires validator-backed runtime evidence for that version. `not_reproduced`
@@ -361,7 +307,7 @@ Example:
       "name": "replay-demo",
       "mode": "replay_cve",
       "target": "/path/to/project",
-      "cve_id": "CVE-2099-0001"
+      "cve_id": "CVE-2025-4565"
     }
   ]
 }
@@ -432,6 +378,13 @@ Fetch the protobuf 5.29.4 source bundle used for CVE-2025-4565 replay with:
 
 ```bash
 bash scripts/fetch_protobuf_5_29_4_fixture.sh
+```
+
+Run the real protobuf CVE-2025-4565 impact example across protobuf 5.29.4 and
+5.29.5 with:
+
+```bash
+bash scripts/run_protobuf_cve_2025_4565_impact.sh
 ```
 
 Fetch the FFmpeg 7.1.1 source bundle used for known-PoC replay with:

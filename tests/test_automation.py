@@ -50,10 +50,10 @@ class AutomationTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            (corpus / "CVE-2099-1010.json").write_text(
+            (corpus / "TEST-AUTO-1010.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-1010",
+                        "cve_id": "TEST-AUTO-1010",
                         "summary": "Batch replay demo",
                         "project": "demo-app",
                         "language": "python",
@@ -78,7 +78,7 @@ class AutomationTests(unittest.TestCase):
                                 "name": "replay-demo",
                                 "mode": "replay_cve",
                                 "target": str(project),
-                                "cve_id": "CVE-2099-1010",
+                                "cve_id": "TEST-AUTO-1010",
                             },
                         ],
                     }

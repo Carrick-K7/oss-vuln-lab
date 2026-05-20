@@ -39,10 +39,10 @@ class ReplayTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (corpus / "payload.txt").write_text("boom\n", encoding="utf-8")
-            (corpus / "CVE-2099-0002.json").write_text(
+            (corpus / "TEST-REPLAY-0002.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0002",
+                        "cve_id": "TEST-REPLAY-0002",
                         "summary": "Demo runtime replay",
                         "project": "demo-app",
                         "language": "python",
@@ -64,11 +64,11 @@ class ReplayTests(unittest.TestCase):
                 AppConfig(runs_dir=str(runs), corpus_dir=str(corpus), enabled_validators=["direct_runtime"]),
                 build_default_registry(),
             )
-            result = engine.replay_cve(str(project), "CVE-2099-0002")
+            result = engine.replay_cve(str(project), "TEST-REPLAY-0002")
 
             self.assertEqual(result.records[0].final.poc_status, "confirmed")
             self.assertEqual(result.records[0].final.status.value, "confirmed_known_poc")
-            self.assertEqual(result.metadata["corpus_record"]["cve_id"], "CVE-2099-0002")
+            self.assertEqual(result.metadata["corpus_record"]["cve_id"], "TEST-REPLAY-0002")
 
     def test_cli_corpus_and_replay_commands_return_zero(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -97,10 +97,10 @@ class ReplayTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (corpus / "payload.txt").write_text("boom\n", encoding="utf-8")
-            (corpus / "CVE-2099-0003.json").write_text(
+            (corpus / "TEST-REPLAY-0003.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0003",
+                        "cve_id": "TEST-REPLAY-0003",
                         "summary": "CLI replay demo",
                         "project": "demo-app",
                         "language": "python",
@@ -130,14 +130,14 @@ class ReplayTests(unittest.TestCase):
             stdout = io.StringIO()
             with contextlib.redirect_stdout(stdout):
                 list_code = main(["--config", str(config), "corpus", "list"])
-                show_code = main(["--config", str(config), "corpus", "show", "CVE-2099-0003"])
-                replay_code = main(["--config", str(config), "replay", "cve", str(project), "CVE-2099-0003"])
+                show_code = main(["--config", str(config), "corpus", "show", "TEST-REPLAY-0003"])
+                replay_code = main(["--config", str(config), "replay", "cve", str(project), "TEST-REPLAY-0003"])
 
             self.assertEqual(list_code, 0)
             self.assertEqual(show_code, 0)
             self.assertEqual(replay_code, 0)
             output = stdout.getvalue()
-            self.assertIn("CVE-2099-0003", output)
+            self.assertIn("TEST-REPLAY-0003", output)
             self.assertIn("Run ID:", output)
 
     def test_replay_cve_confirms_multilanguage_direct_runtime_paths(self) -> None:
@@ -185,7 +185,7 @@ class ReplayTests(unittest.TestCase):
 
             cases = [
                 {
-                    "cve_id": "CVE-2099-1001",
+                    "cve_id": "TEST-REPLAY-1001",
                     "language": "javascript",
                     "project": root / "js-app",
                     "setup": self._setup_javascript_project,
@@ -193,7 +193,7 @@ class ReplayTests(unittest.TestCase):
                     "runtime_env": {},
                 },
                 {
-                    "cve_id": "CVE-2099-1002",
+                    "cve_id": "TEST-REPLAY-1002",
                     "language": "java",
                     "project": root / "java-app",
                     "setup": self._setup_java_project,
@@ -201,7 +201,7 @@ class ReplayTests(unittest.TestCase):
                     "runtime_env": {"PATH": f"{bin_dir}:{os.environ['PATH']}"},
                 },
                 {
-                    "cve_id": "CVE-2099-1003",
+                    "cve_id": "TEST-REPLAY-1003",
                     "language": "rust",
                     "project": root / "rust-app",
                     "setup": self._setup_rust_project,

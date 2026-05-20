@@ -36,10 +36,10 @@ class DashboardTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            (corpus / "CVE-2099-1020.json").write_text(
+            (corpus / "TEST-DASH-1020.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-1020",
+                        "cve_id": "TEST-DASH-1020",
                         "summary": "Dashboard corpus demo",
                         "project": "demo-app",
                         "language": "python",
@@ -75,7 +75,7 @@ class DashboardTests(unittest.TestCase):
 
             self.assertIn(scan_result.run_id, html)
             self.assertIn(batch_result.batch_id, html)
-            self.assertIn("CVE-2099-1020", html)
+            self.assertIn("TEST-DASH-1020", html)
             self.assertIn("Findings and evidence", html)
             self.assertIn("Review batch details", html)
             self.assertIn("Deduplication", html)

@@ -40,7 +40,7 @@ class CorpusTests(unittest.TestCase):
         self.assertIn("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python", record.replay.repro_command)
         self.assertEqual(record.replay.artifacts[0].name, "cve-2025-4565-replay.py")
         digest = hashlib.sha256(record.replay.artifacts[0].content.encode("utf-8")).hexdigest()
-        self.assertEqual(digest, "23ea0174b86c4a20611e8a36f0d49207e0ad7d7ab0be54768e62eb69042378c3")
+        self.assertEqual(digest, "113671d29bbaf9d31944fdf1190dd8119439212cf2afe4f47f69a9e4770e67e6")
 
     def test_loads_manifest_and_materializes_relative_artifact(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -48,18 +48,18 @@ class CorpusTests(unittest.TestCase):
             corpus_dir = root / "corpus"
             corpus_dir.mkdir()
             (corpus_dir / "payload.txt").write_text("boom\n", encoding="utf-8")
-            manifest = corpus_dir / "CVE-2099-0001.json"
+            manifest = corpus_dir / "TEST-CORPUS-0001.json"
             manifest.write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0001",
-                        "summary": "Demo replay",
+                        "cve_id": "TEST-CORPUS-0001",
+                        "summary": "Corpus fixture replay",
                         "project": "demo-app",
                         "language": "python",
                         "vuln_family": "command_execution",
-                        "references": ["https://example.invalid/CVE-2099-0001"],
+                        "references": ["https://example.invalid/TEST-CORPUS-0001"],
                         "replay": {
-                            "title": "Demo replay",
+                            "title": "Corpus fixture replay",
                             "vuln_family": "command_execution",
                             "repro_command": "python3 app.py @payload_path@",
                             "artifacts": [
@@ -78,17 +78,17 @@ class CorpusTests(unittest.TestCase):
             records = store.list_records()
 
             self.assertEqual(len(records), 1)
-            self.assertEqual(records[0].cve_id, "CVE-2099-0001")
+            self.assertEqual(records[0].cve_id, "TEST-CORPUS-0001")
             self.assertEqual(records[0].replay.artifacts[0].content, "boom\n")
 
     def test_load_record_supports_alias_lookup(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             corpus_dir = Path(tmp)
             (corpus_dir / "payload.txt").write_text("boom\n", encoding="utf-8")
-            (corpus_dir / "CVE-2099-0004.json").write_text(
+            (corpus_dir / "TEST-CORPUS-0004.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0004",
+                        "cve_id": "TEST-CORPUS-0004",
                         "summary": "Alias replay",
                         "project": "demo-app",
                         "language": "python",
@@ -107,7 +107,7 @@ class CorpusTests(unittest.TestCase):
 
             record = CorpusStore(str(corpus_dir)).load_record("ghsa-demo-0004")
 
-            self.assertEqual(record.cve_id, "CVE-2099-0004")
+            self.assertEqual(record.cve_id, "TEST-CORPUS-0004")
 
     def test_rejects_artifact_paths_that_escape_manifest_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -116,11 +116,11 @@ class CorpusTests(unittest.TestCase):
             corpus_dir.mkdir()
             escaped = root / "outside.txt"
             escaped.write_text("boom\n", encoding="utf-8")
-            manifest = corpus_dir / "CVE-2099-0005.json"
+            manifest = corpus_dir / "TEST-CORPUS-0005.json"
             manifest.write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0005",
+                        "cve_id": "TEST-CORPUS-0005",
                         "summary": "Escape attempt",
                         "project": "demo-app",
                         "language": "python",
@@ -142,11 +142,11 @@ class CorpusTests(unittest.TestCase):
     def test_rejects_missing_replay_command(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             corpus_dir = Path(tmp)
-            manifest = corpus_dir / "CVE-2099-0006.json"
+            manifest = corpus_dir / "TEST-CORPUS-0006.json"
             manifest.write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0006",
+                        "cve_id": "TEST-CORPUS-0006",
                         "summary": "Missing command",
                         "project": "demo-app",
                         "language": "python",
@@ -169,10 +169,10 @@ class CorpusTests(unittest.TestCase):
             corpus_dir = root / "corpus"
             corpus_dir.mkdir()
             config = root / "config.toml"
-            (corpus_dir / "CVE-2099-0007.json").write_text(
+            (corpus_dir / "TEST-CORPUS-0007.json").write_text(
                 json.dumps(
                     {
-                        "cve_id": "CVE-2099-0007",
+                        "cve_id": "TEST-CORPUS-0007",
                         "summary": "Invalid artifact",
                         "project": "demo-app",
                         "language": "python",

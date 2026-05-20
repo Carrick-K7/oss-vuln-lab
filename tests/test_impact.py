@@ -31,8 +31,8 @@ class ImpactTests(unittest.TestCase):
             )
 
             loaded = load_impact_manifest(manifest)
-            self.assertEqual(loaded.name, "demo-impact")
-            self.assertEqual(loaded.advisory.id, "CVE-2099-2000")
+            self.assertEqual(loaded.name, "impact-fixture")
+            self.assertEqual(loaded.advisory.id, "TEST-IMPACT-001")
             self.assertEqual(loaded.source_signatures[0].classification, "vulnerable")
 
             unsafe = _impact_manifest_payload(str(root / "repo"))
@@ -171,7 +171,7 @@ class ImpactTests(unittest.TestCase):
             payload = _impact_manifest_payload(str(repo))
             payload["intelligence"] = {
                 "enabled": True,
-                "queries": ["CVE-2099-2000 demo PoC"],
+                "queries": ["TEST-IMPACT-001 fixture PoC"],
                 "max_results": 1,
             }
             payload.pop("replay")
@@ -221,7 +221,7 @@ def _impact_manifest_payload(repository: str, *, include_fixed_signature: bool =
             "name": "vulnerable-marker",
             "classification": "vulnerable",
             "file": "app.py",
-            "contains_all": ["VULNERABLE_MARKER"],
+            "contains_all": ["TEST_VULNERABLE_PATTERN"],
         }
     ]
     if include_fixed_signature:
@@ -230,16 +230,16 @@ def _impact_manifest_payload(repository: str, *, include_fixed_signature: bool =
                 "name": "fixed-marker",
                 "classification": "fixed",
                 "file": "app.py",
-                "contains_all": ["FIXED_MARKER"],
+                "contains_all": ["TEST_FIXED_PATTERN"],
             }
         )
     return {
         "schema_version": "0.1",
-        "name": "demo-impact",
+        "name": "impact-fixture",
         "advisory": {
-            "id": "CVE-2099-2000",
-            "project": "demo",
-            "summary": "Demo impact assessment",
+            "id": "TEST-IMPACT-001",
+            "project": "impact-fixture",
+            "summary": "Synthetic impact workflow fixture",
             "vuln_family": "command_execution",
             "source_hints": [{"file": "app.py", "function_or_sink": "__main__"}],
         },
@@ -251,7 +251,7 @@ def _impact_manifest_payload(repository: str, *, include_fixed_signature: bool =
                 {"version": "1.0.1", "ref": "v1.0.1", "role": "fixed_control"},
             ],
         },
-        "replay": {"corpus_ref": "CVE-2099-2000"},
+        "replay": {"corpus_ref": "TEST-IMPACT-001"},
         "source_signatures": signatures,
     }
 
@@ -277,7 +277,7 @@ def _init_git_repo(repo: Path) -> None:
 
 def _write_project(repo: Path, *, vulnerable: bool) -> None:
     (repo / "pyproject.toml").write_text("[project]\nname='demo'\n", encoding="utf-8")
-    marker = "VULNERABLE_MARKER" if vulnerable else "FIXED_MARKER"
+    marker = "TEST_VULNERABLE_PATTERN" if vulnerable else "TEST_FIXED_PATTERN"
     body = [
         "import pathlib",
         "import sys",
@@ -300,12 +300,12 @@ def _write_project(repo: Path, *, vulnerable: bool) -> None:
 
 
 def _write_corpus_record(corpus: Path) -> None:
-    (corpus / "CVE-2099-2000.json").write_text(
+    (corpus / "TEST-IMPACT-001.json").write_text(
         json.dumps(
             {
-                "cve_id": "CVE-2099-2000",
-                "summary": "Demo replay",
-                "project": "demo",
+                "cve_id": "TEST-IMPACT-001",
+                "summary": "Synthetic replay fixture",
+                "project": "impact-fixture",
                 "language": "python",
                 "vuln_family": "command_execution",
                 "replay": {
