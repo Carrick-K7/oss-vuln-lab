@@ -31,7 +31,7 @@ The release trajectory is:
 - Builtin vulnerability families for memory safety, boundary validation, command execution, path traversal, deserialization, SQL injection, SSRF, XXE, template injection, and binary risky-symbol surfacing
 - Local heuristic analysis by default, plus OpenAI-compatible provider hooks
 - Validator backends for Docker build prep, sanitizer runtime checks, host sanitizer runs, and direct runtime replay
-- Local CVE corpus manifests and `replay` commands for known-PoC verification, including LibTIFF CVE-2022-3598 and protobuf CVE-2025-4565 replays
+- Local CVE corpus manifests and `replay` commands for known-PoC verification, including LibTIFF CVE-2022-3598, protobuf CVE-2025-4565, and zlib CVE-2022-37434 replays
 - Static local dashboard generation and optional local HTTP serving with inline finding, evidence, corpus, and batch review
 - Batch and scheduled local execution for scan and replay workloads with deduplication and regression comparison
 - Version impact assessment for Git refs/tags with replay-backed evidence, source signatures, and optional public intelligence capture
@@ -74,6 +74,8 @@ python3 -m oss_vuln_digger replay cve /path/to/libtiff-4.4.0 CVE-2022-3598
 python3 -m oss_vuln_digger replay manifest /path/to/libtiff-4.4.0 ./corpus/CVE-2022-3598.json
 python3 -m oss_vuln_digger corpus show CVE-2025-4565
 python3 -m oss_vuln_digger replay cve /path/to/protobuf-5.29.4 CVE-2025-4565
+python3 -m oss_vuln_digger corpus show CVE-2022-37434
+python3 -m oss_vuln_digger replay cve /path/to/zlib-1.2.12 CVE-2022-37434
 ```
 
 The installed console script is also available as:
@@ -235,20 +237,25 @@ Contract references:
 - Report schema: [docs/schemas/impact-report.schema.json](./docs/schemas/impact-report.schema.json)
 - Decision: [docs/decisions/0008-version-impact-assessment.md](./docs/decisions/0008-version-impact-assessment.md)
 
-The committed real impact example is
-`examples/impact/protobuf-cve-2025-4565.json`. It assesses protobuf
-`5.29.4` and `5.29.5` using the public `CVE-2025-4565` corpus replay and source
-signatures for the upstream recursion-depth fix.
+The committed real impact examples are:
 
-To run the real example, fetch the PyPI source distributions, build a local Git
-repo with tags `v5.29.4` and `v5.29.5`, and execute impact assessment:
+- `examples/impact/protobuf-cve-2025-4565.json`: assesses protobuf `5.29.4`
+  and `5.29.5` using the public `CVE-2025-4565` corpus replay and source
+  signatures for the upstream recursion-depth fix.
+- `examples/impact/zlib-cve-2022-37434.json`: assesses zlib `1.2.12` and
+  `1.2.13` using the public `CVE-2022-37434` corpus replay and source
+  signatures for the upstream gzip extra-field fix.
+
+To run the real examples, download the upstream source archives, build local Git
+repos with version tags, and execute impact assessment:
 
 ```bash
 bash scripts/run_protobuf_cve_2025_4565_impact.sh
+bash scripts/run_zlib_cve_2022_37434_impact.sh
 ```
 
-The script verifies the PyPI source archive hashes before importing them. It
-uses `config.host.example.toml`, so host-side target execution is explicit.
+The scripts verify source archive hashes before importing them. They use
+`config.host.example.toml`, so host-side target execution is explicit.
 
 Impact statuses are separate from finding statuses. `confirmed_affected`
 requires validator-backed runtime evidence for that version. `not_reproduced`
@@ -385,6 +392,13 @@ Run the real protobuf CVE-2025-4565 impact example across protobuf 5.29.4 and
 
 ```bash
 bash scripts/run_protobuf_cve_2025_4565_impact.sh
+```
+
+Run the real zlib CVE-2022-37434 impact example across zlib 1.2.12 and 1.2.13
+with:
+
+```bash
+bash scripts/run_zlib_cve_2022_37434_impact.sh
 ```
 
 Fetch the FFmpeg 7.1.1 source bundle used for known-PoC replay with:
