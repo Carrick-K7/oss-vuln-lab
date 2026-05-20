@@ -5,23 +5,23 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import NoReturn
 
-from oss_vuln_digger.automation import (
+from oss_vuln_lab.automation import (
     BatchRunner,
     ScheduleRunner,
     list_batches,
     load_batch_result,
 )
-from oss_vuln_digger.config import load_config
-from oss_vuln_digger.corpus import CorpusStore
-from oss_vuln_digger.dashboard import serve_dashboard, write_dashboard
-from oss_vuln_digger.impact import (
+from oss_vuln_lab.config import load_config
+from oss_vuln_lab.corpus import CorpusStore
+from oss_vuln_lab.dashboard import serve_dashboard, write_dashboard
+from oss_vuln_lab.impact import (
     ImpactRunner,
     list_impact_reports,
     load_impact_report,
 )
-from oss_vuln_digger.models import ArtifactEncoding
-from oss_vuln_digger.pipeline import ScanEngine
-from oss_vuln_digger.registry import build_default_registry
+from oss_vuln_lab.models import ArtifactEncoding
+from oss_vuln_lab.pipeline import ScanEngine
+from oss_vuln_lab.registry import build_default_registry
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -29,7 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     common.add_argument("--config", help="Path to TOML configuration file", default=argparse.SUPPRESS)
     common.add_argument("--runs-dir", help="Override directory used to store scan runs", default=argparse.SUPPRESS)
 
-    parser = argparse.ArgumentParser(prog="ovd", description="Extensible OSS vulnerability research tool")
+    parser = argparse.ArgumentParser(prog="ovl", description="Local-first OSS vulnerability research lab")
     parser.add_argument("--config", help="Path to TOML configuration file", default=argparse.SUPPRESS)
     parser.add_argument("--runs-dir", help="Override directory used to store scan runs", default=argparse.SUPPRESS)
 

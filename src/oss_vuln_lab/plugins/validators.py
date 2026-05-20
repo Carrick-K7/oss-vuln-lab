@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from shlex import quote
 
-from oss_vuln_digger.models import (
+from oss_vuln_lab.models import (
     Candidate,
     EvidenceKind,
     EvidenceSpec,
@@ -15,7 +15,7 @@ from oss_vuln_digger.models import (
     ValidationResult,
     ValidationStatus,
 )
-from oss_vuln_digger.plugins.base import Validator
+from oss_vuln_lab.plugins.base import Validator
 
 
 class DockerBuildValidator(Validator):

@@ -3,8 +3,8 @@ import hashlib
 import unittest
 from pathlib import Path
 
-from oss_vuln_digger.corpus import CorpusStore
-from oss_vuln_digger.impact import load_impact_manifest
+from oss_vuln_lab.corpus import CorpusStore
+from oss_vuln_lab.impact import load_impact_manifest
 
 
 ROOT = Path(__file__).resolve().parents[1]

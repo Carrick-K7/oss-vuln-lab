@@ -9,9 +9,9 @@ from urllib.parse import quote_plus
 import urllib.error
 import urllib.request
 
-from oss_vuln_digger.config import IntelConfig
-from oss_vuln_digger.models import ensure_directory
-from oss_vuln_digger.safety import validate_simple_filename
+from oss_vuln_lab.config import IntelConfig
+from oss_vuln_lab.models import ensure_directory
+from oss_vuln_lab.safety import validate_simple_filename
 
 
 class IntelligenceError(ValueError):

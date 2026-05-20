@@ -6,7 +6,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from oss_vuln_digger.automation import (
+from oss_vuln_lab.automation import (
     BatchJobSpec,
     BatchRunner,
     BatchSpec,
@@ -14,10 +14,10 @@ from oss_vuln_digger.automation import (
     load_batch_result,
     schedule_state_path,
 )
-from oss_vuln_digger.cli import main
-from oss_vuln_digger.config import AppConfig
-from oss_vuln_digger.pipeline import ScanEngine
-from oss_vuln_digger.registry import build_default_registry
+from oss_vuln_lab.cli import main
+from oss_vuln_lab.config import AppConfig
+from oss_vuln_lab.pipeline import ScanEngine
+from oss_vuln_lab.registry import build_default_registry
 
 
 class AutomationTests(unittest.TestCase):

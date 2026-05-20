@@ -9,8 +9,8 @@ from pathlib import Path
 import time
 from typing import Any
 
-from oss_vuln_digger.models import ensure_directory
-from oss_vuln_digger.pipeline import ScanEngine
+from oss_vuln_lab.models import ensure_directory
+from oss_vuln_lab.pipeline import ScanEngine
 
 
 BATCHES_DIR_NAME = "batches"

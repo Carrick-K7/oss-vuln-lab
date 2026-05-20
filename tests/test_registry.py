@@ -2,10 +2,10 @@ import unittest
 from pathlib import Path
 import tempfile
 
-from oss_vuln_digger.config import LLMConfig
-from oss_vuln_digger.models import ScanTarget, TargetMode
-from oss_vuln_digger.plugins.base import LLMProvider, ProjectAdapter
-from oss_vuln_digger.registry import Registry, build_default_registry
+from oss_vuln_lab.config import LLMConfig
+from oss_vuln_lab.models import ScanTarget, TargetMode
+from oss_vuln_lab.plugins.base import LLMProvider, ProjectAdapter
+from oss_vuln_lab.registry import Registry, build_default_registry
 
 
 class DummyProvider(LLMProvider):

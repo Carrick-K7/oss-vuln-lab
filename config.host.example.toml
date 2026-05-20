@@ -1,5 +1,5 @@
 [app]
-runs_dir = ".ovd_runs"
+runs_dir = ".ovl_runs"
 corpus_dir = "corpus"
 # Explicit opt-in for host-side execution of target and replay commands.
 enabled_validators = ["host_sanitizer_runtime", "direct_runtime"]

@@ -25,18 +25,23 @@ class LLMConfig:
 @dataclass(slots=True)
 class IntelConfig:
     web_search_url: str = ""
-    web_search_api_key_env: str = "OVD_WEB_SEARCH_API_KEY"
+    web_search_api_key_env: str = "OVL_WEB_SEARCH_API_KEY"
     timeout_seconds: int = 20
     max_fetch_bytes: int = 1024 * 1024
 
     @property
     def web_search_api_key(self) -> str:
-        return os.environ.get(self.web_search_api_key_env, "")
+        configured = os.environ.get(self.web_search_api_key_env, "")
+        if configured:
+            return configured
+        if self.web_search_api_key_env == "OVL_WEB_SEARCH_API_KEY":
+            return os.environ.get("OVD_WEB_SEARCH_API_KEY", "")
+        return ""
 
 
 @dataclass(slots=True)
 class AppConfig:
-    runs_dir: str = ".ovd_runs"
+    runs_dir: str = ".ovl_runs"
     corpus_dir: str = "corpus"
     enabled_validators: list[str] = field(
         default_factory=lambda: ["docker_build", "sanitizer_runtime"]

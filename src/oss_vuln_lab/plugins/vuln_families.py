@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-from oss_vuln_digger.models import Candidate, CandidateKind, ProjectContext, TargetMode
-from oss_vuln_digger.plugins.base import VulnFamilyPlugin
+from oss_vuln_lab.models import Candidate, CandidateKind, ProjectContext, TargetMode
+from oss_vuln_lab.plugins.base import VulnFamilyPlugin
 
 
 CPP_SUFFIXES = {".c", ".cc", ".cpp", ".cxx"}

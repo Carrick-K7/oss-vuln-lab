@@ -11,10 +11,10 @@ import re
 import subprocess
 from typing import Any
 
-from oss_vuln_digger.corpus import CorpusStore
-from oss_vuln_digger.intelligence import IntelResult, WebIntelProvider
-from oss_vuln_digger.models import FindingStatus, ValidationStatus, ensure_directory
-from oss_vuln_digger.pipeline import ScanEngine
+from oss_vuln_lab.corpus import CorpusStore
+from oss_vuln_lab.intelligence import IntelResult, WebIntelProvider
+from oss_vuln_lab.models import FindingStatus, ValidationStatus, ensure_directory
+from oss_vuln_lab.pipeline import ScanEngine
 
 
 IMPACTS_DIR_NAME = "impacts"

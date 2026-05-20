@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_ROOT="${1:-$ROOT_DIR/.targets}"
-RUNS_DIR="${OVD_RUNS_DIR:-$ROOT_DIR/.ovd_runs}"
+RUNS_DIR="${OVL_RUNS_DIR:-${OVD_RUNS_DIR:-$ROOT_DIR/.ovl_runs}}"
 IMPACT_REPO="$TARGET_ROOT/protobuf-cve-2025-4565-git"
 MANIFEST="$ROOT_DIR/examples/impact/protobuf-cve-2025-4565.json"
 RUNTIME_MANIFEST="$TARGET_ROOT/protobuf-cve-2025-4565-impact.json"
@@ -44,8 +44,8 @@ fetch_release "5.29.5" "bc1463bafd4b0929216c35f437a8e28731a2b7fe3d98bb77a600efce
 rm -rf "$IMPACT_REPO"
 mkdir -p "$IMPACT_REPO"
 git -C "$IMPACT_REPO" init
-git -C "$IMPACT_REPO" config user.email "oss-vuln-digger@example.invalid"
-git -C "$IMPACT_REPO" config user.name "oss-vuln-digger fixture"
+git -C "$IMPACT_REPO" config user.email "oss-vuln-lab@example.invalid"
+git -C "$IMPACT_REPO" config user.name "oss-vuln-lab fixture"
 
 import_release "5.29.4"
 import_release "5.29.5"
@@ -63,7 +63,7 @@ payload["version_source"]["repository"] = repository
 target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 ' "$MANIFEST" "$RUNTIME_MANIFEST" "$IMPACT_REPO"
 
-python3 -m oss_vuln_digger \
+python3 -m oss_vuln_lab \
   --config "$ROOT_DIR/config.host.example.toml" \
   --runs-dir "$RUNS_DIR" \
   impact assess "$RUNTIME_MANIFEST"

@@ -8,10 +8,10 @@ from hashlib import sha1
 from pathlib import Path
 from typing import Any
 
-from oss_vuln_digger.config import AppConfig
-from oss_vuln_digger.corpus import CorpusStore
-from oss_vuln_digger.loader import stage_target
-from oss_vuln_digger.models import (
+from oss_vuln_lab.config import AppConfig
+from oss_vuln_lab.corpus import CorpusStore
+from oss_vuln_lab.loader import stage_target
+from oss_vuln_lab.models import (
     AnalysisResult,
     ArtifactEncoding,
     ArtifactSpec,
@@ -28,10 +28,10 @@ from oss_vuln_digger.models import (
     ValidationStatus,
     ensure_directory,
 )
-from oss_vuln_digger.registry import Registry
-from oss_vuln_digger.reporting import write_markdown_report
-from oss_vuln_digger.safety import validate_simple_filename
-from oss_vuln_digger.storage import create_run_dir, load_scan_result, write_scan_result
+from oss_vuln_lab.registry import Registry
+from oss_vuln_lab.reporting import write_markdown_report
+from oss_vuln_lab.safety import validate_simple_filename
+from oss_vuln_lab.storage import create_run_dir, load_scan_result, write_scan_result
 
 
 class ScanEngine:

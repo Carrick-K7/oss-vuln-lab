@@ -5,7 +5,7 @@
 
 ## Context
 
-oss-vuln-digger is an AI-Native, security-sensitive project. The project needs AI-led implementation speed, but vulnerability research code has failure modes that are easy to miss in a single implementation pass:
+oss-vuln-lab is an AI-Native, security-sensitive project. The project needs AI-led implementation speed, but vulnerability research code has failure modes that are easy to miss in a single implementation pass:
 
 - drifting away from the current specs
 - weakening execution-safety boundaries

@@ -3,19 +3,19 @@ from __future__ import annotations
 from collections import OrderedDict
 from typing import Callable
 
-from oss_vuln_digger.config import LLMConfig
-from oss_vuln_digger.models import ScanTarget, TargetMode
-from oss_vuln_digger.plugins.base import LLMProvider, ProjectAdapter, Validator, VulnFamilyPlugin
-from oss_vuln_digger.plugins.llm import LocalHeuristicProvider, OpenAICompatibleProvider, OpenAIProvider
-from oss_vuln_digger.plugins.project_adapters import CppSourceAdapter, ElfBinaryAdapter
-from oss_vuln_digger.plugins.validators import (
+from oss_vuln_lab.config import LLMConfig
+from oss_vuln_lab.models import ScanTarget, TargetMode
+from oss_vuln_lab.plugins.base import LLMProvider, ProjectAdapter, Validator, VulnFamilyPlugin
+from oss_vuln_lab.plugins.llm import LocalHeuristicProvider, OpenAICompatibleProvider, OpenAIProvider
+from oss_vuln_lab.plugins.project_adapters import CppSourceAdapter, ElfBinaryAdapter
+from oss_vuln_lab.plugins.validators import (
     DirectRuntimeValidator,
     DockerBuildValidator,
     HostBuildValidator,
     HostSanitizerRuntimeValidator,
     SanitizerRuntimeValidator,
 )
-from oss_vuln_digger.plugins.vuln_families import (
+from oss_vuln_lab.plugins.vuln_families import (
     BinarySurfacePlugin,
     BoundaryValidationPlugin,
     CommandExecutionPlugin,
@@ -27,7 +27,7 @@ from oss_vuln_digger.plugins.vuln_families import (
     TemplateInjectionPlugin,
     XxePlugin,
 )
-from oss_vuln_digger.plugins.project_adapters import (
+from oss_vuln_lab.plugins.project_adapters import (
     JavaScriptSourceAdapter,
     JavaSourceAdapter,
     PythonSourceAdapter,

@@ -1,6 +1,6 @@
-# OSS Vuln Digger
+# OSS Vuln Lab
 
-`oss-vuln-digger` is a local-first OSS vulnerability research tool. It scans source repositories and ELF binaries, generates candidate findings, synthesizes or replays PoCs, and records validation evidence. The current codebase already supports C/C++, Python, JavaScript, Java, Rust, and replay manifests for known CVEs.
+`oss-vuln-lab` is a local-first OSS vulnerability research tool. It scans source repositories and ELF binaries, generates candidate findings, synthesizes or replays PoCs, and records validation evidence. The current codebase already supports C/C++, Python, JavaScript, Java, Rust, and replay manifests for known CVEs.
 
 The release trajectory is:
 
@@ -39,8 +39,8 @@ The release trajectory is:
 
 ## Repository Layout
 
-- `src/oss_vuln_digger/`: package source
-- `src/oss_vuln_digger/plugins/`: project adapters, vuln family plugins, validators, LLM providers
+- `src/oss_vuln_lab/`: package source
+- `src/oss_vuln_lab/plugins/`: project adapters, vuln family plugins, validators, LLM providers
 - `tests/`: unit and fixture-driven integration tests
 - `scripts/`: helper scripts for fixture acquisition
 - `docs/decisions/`: numbered Decision Records
@@ -54,11 +54,11 @@ The release trajectory is:
 Primary commands:
 
 ```bash
-python3 -m oss_vuln_digger scan /path/to/project
-python3 -m oss_vuln_digger triage <run-id> <finding-id>
-python3 -m oss_vuln_digger repro <run-id> <finding-id>
-python3 -m oss_vuln_digger report <run-id>
-python3 -m oss_vuln_digger verify-known /path/to/project \
+python3 -m oss_vuln_lab scan /path/to/project
+python3 -m oss_vuln_lab triage <run-id> <finding-id>
+python3 -m oss_vuln_lab repro <run-id> <finding-id>
+python3 -m oss_vuln_lab report <run-id>
+python3 -m oss_vuln_lab verify-known /path/to/project \
   --title "Known crash replay" \
   --vuln-family memory_safety \
   --repro-command "./app @payload_path@" \
@@ -68,48 +68,50 @@ python3 -m oss_vuln_digger verify-known /path/to/project \
 Corpus and replay commands:
 
 ```bash
-python3 -m oss_vuln_digger corpus list
-python3 -m oss_vuln_digger corpus show CVE-2022-3598
-python3 -m oss_vuln_digger replay cve /path/to/libtiff-4.4.0 CVE-2022-3598
-python3 -m oss_vuln_digger replay manifest /path/to/libtiff-4.4.0 ./corpus/CVE-2022-3598.json
-python3 -m oss_vuln_digger corpus show CVE-2025-4565
-python3 -m oss_vuln_digger replay cve /path/to/protobuf-5.29.4 CVE-2025-4565
-python3 -m oss_vuln_digger corpus show CVE-2022-37434
-python3 -m oss_vuln_digger replay cve /path/to/zlib-1.2.12 CVE-2022-37434
+python3 -m oss_vuln_lab corpus list
+python3 -m oss_vuln_lab corpus show CVE-2022-3598
+python3 -m oss_vuln_lab replay cve /path/to/libtiff-4.4.0 CVE-2022-3598
+python3 -m oss_vuln_lab replay manifest /path/to/libtiff-4.4.0 ./corpus/CVE-2022-3598.json
+python3 -m oss_vuln_lab corpus show CVE-2025-4565
+python3 -m oss_vuln_lab replay cve /path/to/protobuf-5.29.4 CVE-2025-4565
+python3 -m oss_vuln_lab corpus show CVE-2022-37434
+python3 -m oss_vuln_lab replay cve /path/to/zlib-1.2.12 CVE-2022-37434
 ```
 
 The installed console script is also available as:
 
 ```bash
-ovd scan /path/to/project
+ovl scan /path/to/project
 ```
+
+`ovd` remains available as a pre-1.0 compatibility alias.
 
 Local UI commands:
 
 ```bash
-python3 -m oss_vuln_digger ui build
-python3 -m oss_vuln_digger ui serve --host 127.0.0.1 --port 8765
+python3 -m oss_vuln_lab ui build
+python3 -m oss_vuln_lab ui serve --host 127.0.0.1 --port 8765
 ```
 
 Batch and schedule commands:
 
 ```bash
-python3 -m oss_vuln_digger batch run ./batch.json
-python3 -m oss_vuln_digger batch list
-python3 -m oss_vuln_digger batch show <batch-id>
-python3 -m oss_vuln_digger schedule once ./schedule.json
-python3 -m oss_vuln_digger schedule run ./schedule.json --iterations 1 --poll-seconds 60
-python3 -m oss_vuln_digger schedule show ./schedule.json
+python3 -m oss_vuln_lab batch run ./batch.json
+python3 -m oss_vuln_lab batch list
+python3 -m oss_vuln_lab batch show <batch-id>
+python3 -m oss_vuln_lab schedule once ./schedule.json
+python3 -m oss_vuln_lab schedule run ./schedule.json --iterations 1 --poll-seconds 60
+python3 -m oss_vuln_lab schedule show ./schedule.json
 ```
 
 Impact assessment commands:
 
 ```bash
-python3 -m oss_vuln_digger impact plan ./impact.json --allow-network
-python3 -m oss_vuln_digger impact assess ./impact.json --allow-network
-python3 -m oss_vuln_digger impact assess ./impact.json --allow-network --execute-generated-poc
-python3 -m oss_vuln_digger impact list
-python3 -m oss_vuln_digger impact show <impact-id>
+python3 -m oss_vuln_lab impact plan ./impact.json --allow-network
+python3 -m oss_vuln_lab impact assess ./impact.json --allow-network
+python3 -m oss_vuln_lab impact assess ./impact.json --allow-network --execute-generated-poc
+python3 -m oss_vuln_lab impact list
+python3 -m oss_vuln_lab impact show <impact-id>
 ```
 
 ## Configuration
@@ -117,27 +119,31 @@ python3 -m oss_vuln_digger impact show <impact-id>
 Start from `config.example.toml`. The default provider is `local`, which uses deterministic heuristics and does not require network access.
 
 ```bash
-python3 -m oss_vuln_digger scan /path/to/project \
+python3 -m oss_vuln_lab scan /path/to/project \
   --config config.example.toml \
-  --runs-dir .ovd_runs
+  --runs-dir .ovl_runs
 ```
 
 For host-side validation without Docker:
 
 ```bash
-python3 -m oss_vuln_digger repro <run-id> <finding-id> \
+python3 -m oss_vuln_lab repro <run-id> <finding-id> \
   --config config.host.example.toml
 ```
 
 Key config fields:
 
-- `app.runs_dir`: base directory for per-run output
+- `app.runs_dir`: base directory for per-run output; default is `.ovl_runs`
 - `app.corpus_dir`: directory containing local CVE replay manifests
 - `app.enabled_validators`: enabled validator names
 - `llm.provider`: `local`, `openai`, or `openai_compatible`
 - `intel.web_search_url`: optional JSON search endpoint for `impact ... --allow-network`
-- `intel.web_search_api_key_env`: environment variable name for the optional search API key
+- `intel.web_search_api_key_env`: environment variable name for the optional search API key; default is `OVL_WEB_SEARCH_API_KEY`
 - `intel.max_fetch_bytes`: maximum bytes stored for each fetched public intelligence page
+
+For the pre-1.0 rename, `OVD_WEB_SEARCH_API_KEY` remains a fallback when the
+default `OVL_WEB_SEARCH_API_KEY` is not set. The real impact example scripts
+also accept legacy `OVD_RUNS_DIR` when `OVL_RUNS_DIR` is unset.
 
 The default validator set avoids host/direct runtime replay. Enable `host_sanitizer_runtime` or `direct_runtime` only when you intentionally want local host execution of target commands or replay commands.
 
@@ -159,7 +165,7 @@ Supported placeholders in replay commands include:
 Example:
 
 ```bash
-python3 -m oss_vuln_digger verify-known /path/to/project \
+python3 -m oss_vuln_lab verify-known /path/to/project \
   --title "Known stack overflow replay" \
   --vuln-family memory_safety \
   --repro-command "./app @payload_path@" \
@@ -196,7 +202,7 @@ target="$(bash scripts/fetch_libtiff_4_4_0_fixture.sh)"
 Then replay the corpus record. The host config is explicit opt-in for local target execution:
 
 ```bash
-python3 -m oss_vuln_digger \
+python3 -m oss_vuln_lab \
   --config config.host.example.toml \
   replay cve "$target" CVE-2022-3598
 ```
@@ -212,7 +218,7 @@ target="$(bash scripts/fetch_protobuf_5_29_4_fixture.sh)"
 Then replay the corpus record:
 
 ```bash
-python3 -m oss_vuln_digger \
+python3 -m oss_vuln_lab \
   --config config.host.example.toml \
   replay cve "$target" CVE-2025-4565
 ```

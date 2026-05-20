@@ -5,9 +5,9 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from oss_vuln_digger.config import LLMConfig
-from oss_vuln_digger.models import AnalysisResult, ArtifactSpec, PocSource, PocSpec
-from oss_vuln_digger.plugins.base import LLMProvider
+from oss_vuln_lab.config import LLMConfig
+from oss_vuln_lab.models import AnalysisResult, ArtifactSpec, PocSource, PocSpec
+from oss_vuln_lab.plugins.base import LLMProvider
 
 
 REQUIRED_ANALYSIS_FIELDS = (

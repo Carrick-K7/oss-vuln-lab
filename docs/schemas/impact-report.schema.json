@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oss-vuln-digger.local/schemas/impact-report.schema.json",
-  "title": "oss-vuln-digger Impact Assessment Report",
+  "$id": "https://oss-vuln-lab.local/schemas/impact-report.schema.json",
+  "title": "oss-vuln-lab Impact Assessment Report",
   "type": "object",
   "required": ["impact_id", "created_at", "manifest_ref", "name", "advisory", "versions"],
   "properties": {

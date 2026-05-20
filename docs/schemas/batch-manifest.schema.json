@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oss-vuln-digger.local/schemas/batch-manifest.schema.json",
-  "title": "oss-vuln-digger Batch Manifest",
+  "$id": "https://oss-vuln-lab.local/schemas/batch-manifest.schema.json",
+  "title": "oss-vuln-lab Batch Manifest",
   "type": "object",
   "required": ["name", "jobs"],
   "properties": {

@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from oss_vuln_digger.models import ScanResult, ensure_directory
+from oss_vuln_lab.models import ScanResult, ensure_directory
 
 
 STATE_FILE = "run.json"
@@ -49,7 +49,7 @@ def write_scan_result(result: ScanResult) -> None:
     )
 
 
-def load_scan_result(run_ref: str, base_dir: str = ".ovd_runs") -> ScanResult:
+def load_scan_result(run_ref: str, base_dir: str = ".ovl_runs") -> ScanResult:
     candidate = Path(run_ref)
     if candidate.is_dir():
         run_dir = candidate

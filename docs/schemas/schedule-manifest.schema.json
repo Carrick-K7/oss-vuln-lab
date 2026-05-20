@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://oss-vuln-digger.local/schemas/schedule-manifest.schema.json",
-  "title": "oss-vuln-digger Schedule Manifest",
+  "$id": "https://oss-vuln-lab.local/schemas/schedule-manifest.schema.json",
+  "title": "oss-vuln-lab Schedule Manifest",
   "type": "object",
   "required": ["name", "tasks"],
   "properties": {

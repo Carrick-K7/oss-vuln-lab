@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from oss_vuln_digger.models import ScanTarget, TargetMode
+from oss_vuln_lab.models import ScanTarget, TargetMode
 
 
 def stage_target(spec: str, checkout_dir: Path) -> ScanTarget:

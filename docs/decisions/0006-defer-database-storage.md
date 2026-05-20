@@ -10,7 +10,7 @@
 当前架构已经有三个清晰的本地数据来源：
 
 - `corpus/` 存放人工整理的 CVE/advisory replay manifest 和可复用 PoC artifact。
-- `.ovd_runs/<run-id>/` 存放执行证据、报告和单次运行 artifact。
+- `.ovl_runs/<run-id>/` 存放执行证据、报告和单次运行 artifact。
 - `docs/schemas/` 存放机器可校验的 manifest 形状。
 
 在 advisory 规模、查询压力或外部 feed 同步语义尚未成型前引入数据库，会过早制造第二个元数据来源。

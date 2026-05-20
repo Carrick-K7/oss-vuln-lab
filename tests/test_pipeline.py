@@ -5,8 +5,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from oss_vuln_digger.config import AppConfig
-from oss_vuln_digger.models import (
+from oss_vuln_lab.config import AppConfig
+from oss_vuln_lab.models import (
     ArtifactEncoding,
     Candidate,
     CandidateKind,
@@ -17,11 +17,11 @@ from oss_vuln_digger.models import (
     ScanTarget,
     TargetMode,
 )
-from oss_vuln_digger.pipeline import ScanEngine
-from oss_vuln_digger.plugins.project_adapters import CppSourceAdapter
-from oss_vuln_digger.plugins.validators import DockerBuildValidator
-from oss_vuln_digger.registry import build_default_registry
-from oss_vuln_digger.storage import REPORT_JSON, REPORT_MD, STATE_FILE
+from oss_vuln_lab.pipeline import ScanEngine
+from oss_vuln_lab.plugins.project_adapters import CppSourceAdapter
+from oss_vuln_lab.plugins.validators import DockerBuildValidator
+from oss_vuln_lab.registry import build_default_registry
+from oss_vuln_lab.storage import REPORT_JSON, REPORT_MD, STATE_FILE
 
 
 SOURCE_SAMPLE = """\
@@ -337,7 +337,7 @@ class PipelineTests(unittest.TestCase):
                 source=PocSource.GENERATED,
             )
 
-            with mock.patch("oss_vuln_digger.plugins.validators.shutil.which", return_value="/usr/bin/docker"):
+            with mock.patch("oss_vuln_lab.plugins.validators.shutil.which", return_value="/usr/bin/docker"):
                 result = DockerBuildValidator().run(project, candidate, poc, Path(tmp))
 
             self.assertIn("--network none", result.command)

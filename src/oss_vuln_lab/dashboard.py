@@ -8,11 +8,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-from oss_vuln_digger.automation import BATCHES_DIR_NAME, BATCH_STATE_FILE
-from oss_vuln_digger.corpus import CorpusStore
-from oss_vuln_digger.impact import IMPACT_REPORT_MD, IMPACT_STATE_FILE, IMPACTS_DIR_NAME, list_impact_reports
-from oss_vuln_digger.models import ensure_directory
-from oss_vuln_digger.storage import REPORT_JSON, STATE_FILE
+from oss_vuln_lab.automation import BATCHES_DIR_NAME, BATCH_STATE_FILE
+from oss_vuln_lab.corpus import CorpusStore
+from oss_vuln_lab.impact import IMPACT_REPORT_MD, IMPACT_STATE_FILE, IMPACTS_DIR_NAME, list_impact_reports
+from oss_vuln_lab.models import ensure_directory
+from oss_vuln_lab.storage import REPORT_JSON, STATE_FILE
 
 
 def load_run_reports(runs_dir: str) -> list[dict[str, Any]]:
@@ -94,7 +94,7 @@ def render_dashboard_html(runs_dir: str, corpus_dir: str = "") -> str:
             "<head>",
             "  <meta charset='utf-8'>",
             "  <meta name='viewport' content='width=device-width, initial-scale=1'>",
-            "  <title>oss-vuln-digger dashboard</title>",
+            "  <title>oss-vuln-lab dashboard</title>",
             "  <style>",
             "    :root { color-scheme: light; --bg: #f6f4ee; --fg: #202124; --muted: #5f6368; --card: #ffffff; --line: #d9d2c4; --accent: #126b52; --warn: #8b3a1e; }",
             "    body { margin: 0; font-family: 'Iowan Old Style', 'Palatino Linotype', serif; background: radial-gradient(circle at top left, #fff8e7 0, var(--bg) 45%, #ece9de 100%); color: var(--fg); }",
@@ -125,7 +125,7 @@ def render_dashboard_html(runs_dir: str, corpus_dir: str = "") -> str:
             "<main>",
             "  <section class='hero'>",
             "    <div class='eyebrow'>Local Dashboard</div>",
-            "    <h1>oss-vuln-digger</h1>",
+            "    <h1>oss-vuln-lab</h1>",
             "    <p>Run inspection for the local research kernel, local UI, and batch automation layers.</p>",
             "  </section>",
             "  <section class='stats'>",

@@ -2,8 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from oss_vuln_digger.models import ScanTarget, TargetMode
-from oss_vuln_digger.registry import build_default_registry
+from oss_vuln_lab.models import ScanTarget, TargetMode
+from oss_vuln_lab.registry import build_default_registry
 
 
 class AdapterTests(unittest.TestCase):

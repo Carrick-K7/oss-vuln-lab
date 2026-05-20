@@ -1,6 +1,6 @@
 # Security Policy
 
-`oss-vuln-digger` is a vulnerability research project. Treat vulnerability details, replay inputs, and target information with care.
+`oss-vuln-lab` is a vulnerability research project. Treat vulnerability details, replay inputs, and target information with care.
 
 ## Reporting
 

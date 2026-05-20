@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from oss_vuln_digger.models import ScanResult
-from oss_vuln_digger.storage import REPORT_MD
+from oss_vuln_lab.models import ScanResult
+from oss_vuln_lab.storage import REPORT_MD
 
 
 def render_markdown_report(result: ScanResult) -> str:

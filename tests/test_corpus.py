@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from oss_vuln_digger.cli import main
-from oss_vuln_digger.corpus import CorpusStore, CorpusValidationError
+from oss_vuln_lab.cli import main
+from oss_vuln_lab.corpus import CorpusStore, CorpusValidationError
 
 
 class CorpusTests(unittest.TestCase):

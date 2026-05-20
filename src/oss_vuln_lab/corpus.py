@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from oss_vuln_digger.models import ArtifactEncoding, ArtifactSpec, CveCorpusRecord
-from oss_vuln_digger.safety import validate_simple_filename
+from oss_vuln_lab.models import ArtifactEncoding, ArtifactSpec, CveCorpusRecord
+from oss_vuln_lab.safety import validate_simple_filename
 
 
 class CorpusValidationError(ValueError):

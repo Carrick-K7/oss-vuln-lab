@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-from oss_vuln_digger.config import LLMConfig
-from oss_vuln_digger.models import (
+from oss_vuln_lab.config import LLMConfig
+from oss_vuln_lab.models import (
     AnalysisResult,
     Candidate,
     PocSpec,

@@ -3,8 +3,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from oss_vuln_digger.models import LanguageName, LanguageProfile, ProjectContext, ScanTarget, TargetMode
-from oss_vuln_digger.plugins.base import ProjectAdapter
+from oss_vuln_lab.models import LanguageName, LanguageProfile, ProjectContext, ScanTarget, TargetMode
+from oss_vuln_lab.plugins.base import ProjectAdapter
 
 
 CPP_SOURCE_SUFFIXES = {".c", ".cc", ".cpp", ".cxx", ".h", ".hh", ".hpp"}

@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-The main package lives under `src/oss_vuln_digger/`. Keep CLI and pipeline entrypoints there, and keep plugin implementations under `src/oss_vuln_digger/plugins/`. Put automated tests in `tests/`, shell helpers in `scripts/`, high-level planning in `ROADMAP.md`, high-impact technical choices in `docs/decisions/`, current system contracts in `docs/specs/`, and stable machine-checkable manifest contracts in `docs/schemas/`.
+The main package lives under `src/oss_vuln_lab/`. Keep CLI and pipeline entrypoints there, and keep plugin implementations under `src/oss_vuln_lab/plugins/`. Put automated tests in `tests/`, shell helpers in `scripts/`, high-level planning in `ROADMAP.md`, high-impact technical choices in `docs/decisions/`, current system contracts in `docs/specs/`, and stable machine-checkable manifest contracts in `docs/schemas/`.
 
 ## Local-First Workflow
 This project currently runs without GitHub issues as the source of truth.
@@ -125,11 +125,11 @@ Use `docs/decisions/0000-template.md` as the template.
 Use the current documented entrypoints and keep them stable:
 
 - `python3 -m unittest -q` runs the test suite
-- `python3 -m oss_vuln_digger scan /path/to/project` scans a target repository or ELF binary
-- `python3 -m oss_vuln_digger verify-known /path/to/project ...` replays an imported known PoC
-- `python3 -m oss_vuln_digger corpus list` and `python3 -m oss_vuln_digger replay cve /path/to/project CVE-...` inspect and replay local CVE manifests
-- `python3 -m oss_vuln_digger ui build` and `python3 -m oss_vuln_digger ui serve` operate the local dashboard
-- `python3 -m oss_vuln_digger batch run ./batch.json` and `python3 -m oss_vuln_digger schedule once ./schedule.json` drive local automation
+- `python3 -m oss_vuln_lab scan /path/to/project` scans a target repository or ELF binary
+- `python3 -m oss_vuln_lab verify-known /path/to/project ...` replays an imported known PoC
+- `python3 -m oss_vuln_lab corpus list` and `python3 -m oss_vuln_lab replay cve /path/to/project CVE-...` inspect and replay local CVE manifests
+- `python3 -m oss_vuln_lab ui build` and `python3 -m oss_vuln_lab ui serve` operate the local dashboard
+- `python3 -m oss_vuln_lab batch run ./batch.json` and `python3 -m oss_vuln_lab schedule once ./schedule.json` drive local automation
 
 If you add or change executable flows, document them in `README.md` and update relevant specs, schemas, or a Decision Record as needed.
 

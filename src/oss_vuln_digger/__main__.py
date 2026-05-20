@@ -1,4 +1,4 @@
-from oss_vuln_digger.cli import main
+from oss_vuln_lab.cli import main
 
 
 if __name__ == "__main__":

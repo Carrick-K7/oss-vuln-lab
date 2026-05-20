@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from oss_vuln_digger.cli import main
+from oss_vuln_lab.cli import main
 
 
 class CliTests(unittest.TestCase):

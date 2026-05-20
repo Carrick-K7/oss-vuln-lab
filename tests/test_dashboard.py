@@ -5,12 +5,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from oss_vuln_digger.automation import BatchRunner
-from oss_vuln_digger.cli import main
-from oss_vuln_digger.config import AppConfig
-from oss_vuln_digger.dashboard import write_dashboard
-from oss_vuln_digger.pipeline import ScanEngine
-from oss_vuln_digger.registry import build_default_registry
+from oss_vuln_lab.automation import BatchRunner
+from oss_vuln_lab.cli import main
+from oss_vuln_lab.config import AppConfig
+from oss_vuln_lab.dashboard import write_dashboard
+from oss_vuln_lab.pipeline import ScanEngine
+from oss_vuln_lab.registry import build_default_registry
 
 
 class DashboardTests(unittest.TestCase):

@@ -8,7 +8,7 @@
 
 ## Purpose
 
-本 Spec 定义 `oss-vuln-digger` 的产品边界和核心术语。它约束所有后续功能，避免 AI 或开发者把“漏洞挖掘”“CVE 验证”“PoC 复现”“新漏洞发现”等概念混用。
+本 Spec 定义 `oss-vuln-lab` 的产品边界和核心术语。它约束所有后续功能，避免 AI 或开发者把“漏洞挖掘”“CVE 验证”“PoC 复现”“新漏洞发现”等概念混用。
 
 ## Scope
 
@@ -96,7 +96,7 @@ Then the system must not call it a confirmed vulnerability
 
 ## Compatibility
 
-Existing CLI commands, run artifacts, local dashboard behavior, corpus manifests, batch manifests, and schedule manifests remain valid unless a future Decision Record explicitly changes compatibility.
+Existing workflow commands, run artifacts, local dashboard behavior, corpus manifests, batch manifests, and schedule manifests remain valid unless a future Decision Record explicitly changes compatibility. The accepted project rename in Decision Record 0009 makes `oss_vuln_lab` and `ovl` the primary entrypoints while keeping `oss_vuln_digger` and `ovd` as pre-1.0 compatibility aliases.
 
 ## Security
 

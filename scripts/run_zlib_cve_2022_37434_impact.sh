@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_ROOT="${1:-$ROOT_DIR/.targets}"
-RUNS_DIR="${OVD_RUNS_DIR:-$ROOT_DIR/.ovd_runs}"
+RUNS_DIR="${OVL_RUNS_DIR:-${OVD_RUNS_DIR:-$ROOT_DIR/.ovl_runs}}"
 mkdir -p "$TARGET_ROOT"
 IMPACT_REPO="$(mktemp -d "$TARGET_ROOT/zlib-cve-2022-37434-git.XXXXXX")"
 MANIFEST="$ROOT_DIR/examples/impact/zlib-cve-2022-37434.json"
@@ -41,8 +41,8 @@ fetch_release "1.2.12" "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f7182
 fetch_release "1.2.13" "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30"
 
 git -C "$IMPACT_REPO" init
-git -C "$IMPACT_REPO" config user.email "oss-vuln-digger@example.invalid"
-git -C "$IMPACT_REPO" config user.name "oss-vuln-digger fixture"
+git -C "$IMPACT_REPO" config user.email "oss-vuln-lab@example.invalid"
+git -C "$IMPACT_REPO" config user.name "oss-vuln-lab fixture"
 
 import_release "1.2.12"
 import_release "1.2.13"
@@ -60,7 +60,7 @@ payload["version_source"]["repository"] = repository
 target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 ' "$MANIFEST" "$RUNTIME_MANIFEST" "$IMPACT_REPO"
 
-python3 -m oss_vuln_digger \
+python3 -m oss_vuln_lab \
   --config "$ROOT_DIR/config.host.example.toml" \
   --runs-dir "$RUNS_DIR" \
   impact assess "$RUNTIME_MANIFEST"

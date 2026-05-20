@@ -1,5 +1,5 @@
 [app]
-runs_dir = ".ovd_runs"
+runs_dir = ".ovl_runs"
 corpus_dir = "corpus"
 enabled_validators = ["docker_build", "sanitizer_runtime"]
 
@@ -16,6 +16,6 @@ timeout_seconds = 30
 # Optional JSON web search endpoint used only by `impact ... --allow-network`.
 # The URL may contain {query} and {limit} placeholders.
 web_search_url = ""
-web_search_api_key_env = "OVD_WEB_SEARCH_API_KEY"
+web_search_api_key_env = "OVL_WEB_SEARCH_API_KEY"
 timeout_seconds = 20
 max_fetch_bytes = 1048576

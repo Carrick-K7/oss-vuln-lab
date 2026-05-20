@@ -3,14 +3,15 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "oss-vuln-digger"
+name = "oss-vuln-lab"
 version = "0.1.0"
-description = "Extensible OSS vulnerability research tool"
+description = "Local-first OSS vulnerability research lab"
 readme = "README.md"
 requires-python = ">=3.12"
 
 [project.scripts]
-ovd = "oss_vuln_digger.cli:main"
+ovl = "oss_vuln_lab.cli:main"
+ovd = "oss_vuln_lab.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

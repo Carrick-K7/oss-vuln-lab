@@ -3,15 +3,26 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from oss_vuln_digger.config import AppConfig, load_config
+from oss_vuln_lab.config import AppConfig, load_config
 
 
 class ConfigTests(unittest.TestCase):
     def test_default_config_does_not_enable_host_runtime_execution(self) -> None:
         config = AppConfig()
 
+        self.assertEqual(config.runs_dir, ".ovl_runs")
         self.assertNotIn("direct_runtime", config.enabled_validators)
         self.assertNotIn("host_sanitizer_runtime", config.enabled_validators)
+
+    def test_intel_api_key_env_uses_new_name_with_legacy_fallback(self) -> None:
+        os.environ["OVD_WEB_SEARCH_API_KEY"] = "legacy-secret"
+        try:
+            self.assertEqual(AppConfig().intel.web_search_api_key, "legacy-secret")
+            os.environ["OVL_WEB_SEARCH_API_KEY"] = "new-secret"
+            self.assertEqual(AppConfig().intel.web_search_api_key, "new-secret")
+        finally:
+            os.environ.pop("OVD_WEB_SEARCH_API_KEY", None)
+            os.environ.pop("OVL_WEB_SEARCH_API_KEY", None)
 
     def test_loads_toml_and_env_key(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
