@@ -14,6 +14,11 @@ from oss_vuln_digger.automation import (
 from oss_vuln_digger.config import load_config
 from oss_vuln_digger.corpus import CorpusStore
 from oss_vuln_digger.dashboard import serve_dashboard, write_dashboard
+from oss_vuln_digger.impact import (
+    ImpactRunner,
+    list_impact_reports,
+    load_impact_report,
+)
 from oss_vuln_digger.models import ArtifactEncoding
 from oss_vuln_digger.pipeline import ScanEngine
 from oss_vuln_digger.registry import build_default_registry
@@ -112,6 +117,28 @@ def build_parser() -> argparse.ArgumentParser:
     schedule_run.add_argument("--poll-seconds", type=int, default=60, help="Seconds to sleep between iterations")
     schedule_show = schedule_subparsers.add_parser("show", help="Show saved state for a schedule manifest", parents=[common])
     schedule_show.add_argument("manifest", help="Path to a schedule JSON manifest")
+
+    impact = subparsers.add_parser("impact", help="Plan or assess advisory impact across versions", parents=[common])
+    impact_subparsers = impact.add_subparsers(dest="impact_command", required=True)
+    impact_plan = impact_subparsers.add_parser("plan", help="Resolve impact manifest version targets", parents=[common])
+    impact_plan.add_argument("manifest", help="Path to an impact JSON manifest")
+    impact_plan.add_argument("--allow-network", action="store_true", help="Allow configured public intelligence and network Git access")
+    impact_assess = impact_subparsers.add_parser("assess", help="Assess version impact and write an impact report", parents=[common])
+    impact_assess.add_argument("manifest", help="Path to an impact JSON manifest")
+    impact_assess.add_argument("--allow-network", action="store_true", help="Allow configured public intelligence and network Git access")
+    impact_assess.add_argument(
+        "--execute-discovered-poc",
+        action="store_true",
+        help="Allow execution of supported discovered PoC command templates",
+    )
+    impact_assess.add_argument(
+        "--execute-generated-poc",
+        action="store_true",
+        help="Allow generated PoC execution through configured validators",
+    )
+    impact_subparsers.add_parser("list", help="List recorded impact assessments", parents=[common])
+    impact_show = impact_subparsers.add_parser("show", help="Show one impact assessment", parents=[common])
+    impact_show.add_argument("impact_id", help="Impact directory name or path")
     return parser
 
 
@@ -126,6 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     engine = ScanEngine(config=config, registry=build_default_registry())
     batch_runner = BatchRunner(engine)
     schedule_runner = ScheduleRunner(engine)
+    impact_runner = ImpactRunner(engine)
 
     try:
         if args.command == "scan":
@@ -219,6 +247,27 @@ def main(argv: list[str] | None = None) -> int:
             if args.schedule_command == "show":
                 state = schedule_runner.show_state(args.manifest)
                 _print_schedule_state(state)
+                return 0
+        if args.command == "impact":
+            if args.impact_command == "plan":
+                plan = impact_runner.plan_manifest(args.manifest, allow_network=args.allow_network)
+                _print_impact_plan(plan)
+                return 0
+            if args.impact_command == "assess":
+                report = impact_runner.assess_manifest(
+                    args.manifest,
+                    allow_network=args.allow_network,
+                    execute_discovered_poc=args.execute_discovered_poc,
+                    execute_generated_poc=args.execute_generated_poc,
+                )
+                _print_impact_summary(report, config.runs_dir)
+                return 0
+            if args.impact_command == "list":
+                _print_impact_list(config.runs_dir)
+                return 0
+            if args.impact_command == "show":
+                report = load_impact_report(args.impact_id, config.runs_dir)
+                _print_impact_detail(report, config.runs_dir)
                 return 0
     except (FileNotFoundError, ValueError) as exc:
         print(f"Error: {exc}")
@@ -357,3 +406,48 @@ def _print_schedule_state(state: dict[str, object]) -> None:
     for name, payload in dict(tasks).items():
         info = dict(payload)
         print(f"- {name}: last_run_at={info.get('last_run_at', 'never')} last_batch_id={info.get('last_batch_id', 'n/a')}")
+
+
+def _print_impact_plan(plan) -> None:
+    print(f"Impact: {plan.manifest.name}")
+    print(f"Advisory: {plan.manifest.advisory.id}")
+    print(f"Versions: {len(plan.targets)}")
+    for target in plan.targets:
+        print(f"- {target.version}\t{target.ref}\t{target.role or 'n/a'}\t{target.source}")
+
+
+def _print_impact_summary(report, runs_dir: str) -> None:
+    counts = _impact_status_counts(report)
+    print(f"Impact ID: {report.impact_id}")
+    print(f"Name: {report.name}")
+    print(f"Advisory: {report.advisory.id}")
+    print(f"Versions: {len(report.versions)}")
+    for status, count in sorted(counts.items()):
+        print(f"{status}: {count}")
+    print(f"Artifacts: {Path(runs_dir).expanduser().resolve() / 'impacts' / report.impact_id}")
+
+
+def _print_impact_list(runs_dir: str) -> None:
+    reports = list_impact_reports(runs_dir)
+    if not reports:
+        print("No impact reports found.")
+        return
+    for report in reports:
+        counts = _impact_status_counts(report)
+        count_text = ", ".join(f"{status}={count}" for status, count in sorted(counts.items())) or "no versions"
+        print(f"{report.impact_id}\t{report.name}\t{report.advisory.id}\t{count_text}")
+
+
+def _print_impact_detail(report, runs_dir: str) -> None:
+    _print_impact_summary(report, runs_dir)
+    print("Version Matrix:")
+    for version in report.versions:
+        run = version.run_id or "n/a"
+        print(f"- {version.version}: {version.status.value} ref={version.ref} role={version.role or 'n/a'} run={run}")
+
+
+def _impact_status_counts(report) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for version in report.versions:
+        counts[version.status.value] = counts.get(version.status.value, 0) + 1
+    return counts

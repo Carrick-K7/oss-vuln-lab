@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Stability: stable
-- Last reviewed: 2026-05-09
-- Applies to: validators, pipeline, CLI, batch, schedule, future fuzzing
+- Last reviewed: 2026-05-20
+- Applies to: validators, pipeline, CLI, batch, schedule, impact, future fuzzing
 - Supersedes: none
 
 ## Purpose
@@ -26,6 +26,7 @@
 - environment variables
 - batch and schedule execution
 - future fuzzing corpus and crash artifacts
+- impact public intelligence and Git version workspaces
 
 ## Non-Goals
 
@@ -41,6 +42,9 @@
 - Artifact names accepted from manifests or CLI MUST be simple filenames unless a Decision Record explicitly allows paths.
 - Manifest-relative file paths MUST stay within the manifest directory.
 - Network access during validation MUST be disabled or explicit by default policy.
+- Impact intelligence search, fetched pages, and network Git repositories MUST require explicit `--allow-network`.
+- Discovered PoC artifacts MUST NOT be executed unless the operator explicitly enables discovered-PoC execution for the impact assessment.
+- Generated PoCs MUST NOT be executed unless the operator explicitly enables generated-PoC execution for the impact assessment.
 - Secrets, API keys, tokens and sensitive target details MUST NOT be written into committed fixtures or docs.
 - Batch and schedule MUST NOT weaken safety checks applied to individual scan or replay jobs.
 - AI-generated commands MUST NOT be executed automatically unless they pass the same validator safety boundary as human-provided commands.
@@ -60,6 +64,12 @@ Generated artifacts belong under configured run directories. Corpus artifact mat
 ## Network Access
 
 Networked behavior must be explicit. Future integrations with OSV, NVD, advisory feeds, remote LLMs or remote workers require a Decision Record when they affect data persistence, privacy or execution semantics.
+
+The impact workflow may use a configured JSON web search endpoint and may fetch
+public pages only when `--allow-network` is supplied. Fetched content must be
+size capped, hashed, stored under the impact workspace, and treated as
+untrusted. Network Git repositories used by impact assessment follow the same
+explicit opt-in rule.
 
 ## Future Fuzzing
 

@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Stability: evolving
-- Last reviewed: 2026-05-09
-- Applies to: CLI, pipeline, dashboard, batch, schedule
+- Last reviewed: 2026-05-20
+- Applies to: CLI, pipeline, dashboard, batch, schedule, impact
 - Supersedes: none
 
 ## Purpose
@@ -25,6 +25,7 @@
 - `ui build/serve`
 - `batch run/list/show`
 - `schedule once/run/show`
+- `impact plan/assess/list/show`
 
 ## Non-Goals
 
@@ -41,6 +42,7 @@
 - `batch run` MUST execute scan or replay jobs and preserve per-job run references.
 - `schedule once/run` MUST be local process orchestration, not a durable remote scheduler.
 - `ui build/serve` MUST be an inspection layer over existing local artifacts.
+- `impact` MUST produce version evidence matrices without redefining single-run finding semantics.
 
 ## Workflow Semantics
 
@@ -80,6 +82,14 @@ Batch execution groups multiple scan or replay jobs. Batch results must store pe
 
 Schedule execution evaluates due local tasks and delegates due work to batch execution. Schedule state records last run timestamps and last batch ids.
 
+### impact
+
+`impact plan` validates an impact manifest and resolves selected Git version targets without running validators.
+
+`impact assess` checks out selected versions, optionally captures public intelligence when network access is explicitly allowed, reuses existing replay or scan validation paths, evaluates source signatures, and writes an impact report under `<runs_dir>/impacts/`.
+
+`impact list` and `impact show` inspect recorded impact reports. They must not mutate reports or infer new evidence.
+
 ## 0.1.0 MVP Acceptance
 
 Before tagging `0.1.0`:
@@ -90,6 +100,7 @@ Before tagging `0.1.0`:
 - `batch` MUST preserve per-job run references and summarize job status.
 - `schedule` MUST delegate due tasks into batch execution and persist local schedule state.
 - `ui build` MUST render existing local artifacts without redefining status semantics.
+- `impact assess` MAY remain an evolving workflow, but any persisted impact status must follow `docs/specs/0006-version-impact-assessment.md`.
 - `triage` MAY update a run only if the previous state is recorded as an explicit triage artifact or equivalent event.
 
 ## Scenarios
@@ -102,7 +113,7 @@ Then the batch result references two underlying runs and summarizes findings wit
 
 ```text
 Given a dashboard built from a runs directory
-When the dashboard shows findings and batch results
+When the dashboard shows findings, batch results, and impact reports
 Then displayed status names must match the data semantics spec
 ```
 

@@ -10,6 +10,7 @@ from typing import Any
 
 from oss_vuln_digger.automation import BATCHES_DIR_NAME, BATCH_STATE_FILE
 from oss_vuln_digger.corpus import CorpusStore
+from oss_vuln_digger.impact import IMPACT_REPORT_MD, IMPACT_STATE_FILE, IMPACTS_DIR_NAME, list_impact_reports
 from oss_vuln_digger.models import ensure_directory
 from oss_vuln_digger.storage import REPORT_JSON, STATE_FILE
 
@@ -84,6 +85,7 @@ def load_batch_reports(runs_dir: str) -> list[dict[str, Any]]:
 def render_dashboard_html(runs_dir: str, corpus_dir: str = "") -> str:
     runs = load_run_reports(runs_dir)
     batches = load_batch_reports(runs_dir)
+    impacts = load_impact_summaries(runs_dir)
     corpus = load_corpus_summaries(corpus_dir) if corpus_dir else []
     return "\n".join(
         [
@@ -129,6 +131,7 @@ def render_dashboard_html(runs_dir: str, corpus_dir: str = "") -> str:
             "  <section class='stats'>",
             f"    <div class='stat'><div class='eyebrow'>Runs</div><h2>{len(runs)}</h2><p>Recorded kernel runs under the local runs directory.</p></div>",
             f"    <div class='stat'><div class='eyebrow'>Batches</div><h2>{len(batches)}</h2><p>Batch and schedule executions captured for local automation.</p></div>",
+            f"    <div class='stat'><div class='eyebrow'>Impacts</div><h2>{len(impacts)}</h2><p>Version impact matrices recorded from local assessment manifests.</p></div>",
             f"    <div class='stat'><div class='eyebrow'>Findings</div><h2>{sum(item['finding_count'] for item in runs)}</h2><p>Total findings across the visible run set.</p></div>",
             f"    <div class='stat'><div class='eyebrow'>Corpus</div><h2>{len(corpus)}</h2><p>Local corpus records available for replay-backed inspection.</p></div>",
             "  </section>",
@@ -142,6 +145,12 @@ def render_dashboard_html(runs_dir: str, corpus_dir: str = "") -> str:
             "    <div class='eyebrow'>Batches</div>",
             "    <div class='grid'>",
             *(_render_batch_card(item) for item in batches),
+            "    </div>",
+            "  </section>",
+            "  <section class='section'>",
+            "    <div class='eyebrow'>Impacts</div>",
+            "    <div class='grid'>",
+            *(_render_impact_card(item) for item in impacts),
             "    </div>",
             "  </section>",
             "  <section class='section'>",
@@ -188,6 +197,29 @@ def load_corpus_summaries(corpus_dir: str) -> list[dict[str, Any]]:
         }
         for record in sorted(records, key=lambda item: item.cve_id)
     ]
+
+
+def load_impact_summaries(runs_dir: str) -> list[dict[str, Any]]:
+    reports = list_impact_reports(runs_dir)
+    summaries: list[dict[str, Any]] = []
+    for report in reports:
+        status_counts = Counter(item.status.value for item in report.versions)
+        summaries.append(
+            {
+                "impact_id": report.impact_id,
+                "created_at": report.created_at,
+                "name": report.name,
+                "advisory_id": report.advisory.id,
+                "project": report.advisory.project,
+                "summary": report.advisory.summary,
+                "version_count": len(report.versions),
+                "status_counts": dict(status_counts),
+                "versions": [item.to_dict() for item in report.versions],
+                "impact_json": f"../{IMPACTS_DIR_NAME}/{report.impact_id}/{IMPACT_STATE_FILE}",
+                "impact_md": f"../{IMPACTS_DIR_NAME}/{report.impact_id}/{IMPACT_REPORT_MD}",
+            }
+        )
+    return summaries
 
 
 def _render_run_card(item: dict[str, Any]) -> str:
@@ -256,6 +288,33 @@ def _render_corpus_card(item: dict[str, Any]) -> str:
             "        </div>",
             f"        <p>{escape(item['summary'])}</p>",
             f"        <div class='links'><span>{escape(item['replay_command'])}</span></div>",
+            "      </article>",
+        ]
+    )
+
+
+def _render_impact_card(item: dict[str, Any]) -> str:
+    badges = "".join(
+        f"<span class='badge'>{escape(name)}: {count}</span>"
+        for name, count in sorted(item["status_counts"].items())
+    ) or "<span class='badge warn'>No versions</span>"
+    return "\n".join(
+        [
+            "      <article class='card'>",
+            f"        <div class='eyebrow'>{escape(item['project'])}</div>",
+            f"        <h2>{escape(item['name'])}</h2>",
+            "        <div class='meta'>",
+            f"          <span>{escape(item['created_at'])}</span>",
+            f"          <span>{escape(item['advisory_id'])}</span>",
+            f"          <span>{escape(str(item['version_count']))} versions</span>",
+            "        </div>",
+            f"        <p>{escape(item['summary'])}</p>",
+            f"        <div>{badges}</div>",
+            "        <div class='links'>",
+            f"          <a href='{escape(item['impact_md'])}'>Markdown</a>",
+            f"          <a href='{escape(item['impact_json'])}'>JSON</a>",
+            "        </div>",
+            _render_impact_details(item["versions"]),
             "      </article>",
         ]
     )
@@ -371,5 +430,25 @@ def _render_batch_details(item: dict[str, Any]) -> str:
         elif job.get("error"):
             blocks.append(f"            <pre>{escape(job['error'])}</pre>")
         blocks.append("          </div>")
+    blocks.append("        </details>")
+    return "\n".join(blocks)
+
+
+def _render_impact_details(versions: list[dict[str, Any]]) -> str:
+    if not versions:
+        return ""
+    blocks = ["        <details>", f"          <summary>Review impact matrix ({len(versions)})</summary>"]
+    for version in versions[:8]:
+        evidence = (version.get("evidence") or version.get("error") or "No evidence captured.")[:360]
+        blocks.extend(
+            [
+                "          <div class='finding'>",
+                f"            <h3>{escape(version.get('version', 'unknown'))}</h3>",
+                f"            <div class='meta'><span>{escape(version.get('status', 'unknown'))}</span><span>{escape(version.get('ref', ''))}</span><span>{escape(version.get('role') or 'n/a')}</span></div>",
+                f"            <p>Run: {escape(version.get('run_id') or 'n/a')}</p>",
+                f"            <pre>{escape(evidence)}</pre>",
+                "          </div>",
+            ]
+        )
     blocks.append("        </details>")
     return "\n".join(blocks)

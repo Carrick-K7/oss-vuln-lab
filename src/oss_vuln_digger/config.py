@@ -23,6 +23,18 @@ class LLMConfig:
 
 
 @dataclass(slots=True)
+class IntelConfig:
+    web_search_url: str = ""
+    web_search_api_key_env: str = "OVD_WEB_SEARCH_API_KEY"
+    timeout_seconds: int = 20
+    max_fetch_bytes: int = 1024 * 1024
+
+    @property
+    def web_search_api_key(self) -> str:
+        return os.environ.get(self.web_search_api_key_env, "")
+
+
+@dataclass(slots=True)
 class AppConfig:
     runs_dir: str = ".ovd_runs"
     corpus_dir: str = "corpus"
@@ -30,6 +42,7 @@ class AppConfig:
         default_factory=lambda: ["docker_build", "sanitizer_runtime"]
     )
     llm: LLMConfig = field(default_factory=LLMConfig)
+    intel: IntelConfig = field(default_factory=IntelConfig)
 
 
 def load_config(config_path: str | None = None) -> AppConfig:
@@ -42,6 +55,7 @@ def load_config(config_path: str | None = None) -> AppConfig:
 
     app_data: dict[str, Any] = data.get("app", {})
     llm_data: dict[str, Any] = data.get("llm", {})
+    intel_data: dict[str, Any] = data.get("intel", {})
 
     if "runs_dir" in app_data:
         config.runs_dir = str(app_data["runs_dir"])
@@ -58,5 +72,11 @@ def load_config(config_path: str | None = None) -> AppConfig:
         temperature=float(llm_data.get("temperature", config.llm.temperature)),
         max_tokens=int(llm_data.get("max_tokens", config.llm.max_tokens)),
         timeout_seconds=int(llm_data.get("timeout_seconds", config.llm.timeout_seconds)),
+    )
+    config.intel = IntelConfig(
+        web_search_url=str(intel_data.get("web_search_url", config.intel.web_search_url)),
+        web_search_api_key_env=str(intel_data.get("web_search_api_key_env", config.intel.web_search_api_key_env)),
+        timeout_seconds=int(intel_data.get("timeout_seconds", config.intel.timeout_seconds)),
+        max_fetch_bytes=int(intel_data.get("max_fetch_bytes", config.intel.max_fetch_bytes)),
     )
     return config

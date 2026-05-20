@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oss-vuln-digger.local/schemas/impact-manifest.schema.json",
+  "title": "oss-vuln-digger Impact Assessment Manifest",
+  "type": "object",
+  "required": ["schema_version", "name", "advisory", "version_source"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["0.1"]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "advisory": {
+      "$ref": "#/$defs/advisory"
+    },
+    "version_source": {
+      "$ref": "#/$defs/version_source"
+    },
+    "replay": {
+      "$ref": "#/$defs/replay"
+    },
+    "intelligence": {
+      "$ref": "#/$defs/intelligence"
+    },
+    "source_signatures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_signature"
+      },
+      "default": []
+    },
+    "metadata": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "advisory": {
+      "type": "object",
+      "required": ["id", "project", "summary"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vuln_family": {
+          "type": "string",
+          "default": ""
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "source_hints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_hint"
+          },
+          "default": []
+        }
+      },
+      "additionalProperties": true
+    },
+    "source_hint": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+        },
+        "function_or_sink": {
+          "type": "string",
+          "default": ""
+        },
+        "description": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "additionalProperties": true
+    },
+    "version_source": {
+      "type": "object",
+      "required": ["type", "repository"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["git"]
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "explicit": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/version_target"
+          },
+          "default": []
+        },
+        "discover": {
+          "$ref": "#/$defs/discover"
+        }
+      },
+      "additionalProperties": true
+    },
+    "version_target": {
+      "type": "object",
+      "required": ["version", "ref"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "additionalProperties": true
+    },
+    "discover": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "include": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 20
+        }
+      },
+      "additionalProperties": true
+    },
+    "replay": {
+      "type": "object",
+      "properties": {
+        "corpus_ref": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "additionalProperties": true
+    },
+    "intelligence": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10
+        }
+      },
+      "additionalProperties": true
+    },
+    "source_signature": {
+      "type": "object",
+      "required": ["name", "classification", "file"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "type": "string",
+          "enum": ["vulnerable", "fixed"]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+        },
+        "contains_all": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "contains_any": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "absent_all": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

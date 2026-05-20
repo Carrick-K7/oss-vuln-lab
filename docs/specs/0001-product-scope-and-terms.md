@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Stability: stable
-- Last reviewed: 2026-05-09
-- Applies to: CLI, pipeline, validators, dashboard, batch, schedule, docs
+- Last reviewed: 2026-05-20
+- Applies to: CLI, pipeline, validators, dashboard, batch, schedule, impact, docs
 - Supersedes: none
 
 ## Purpose
@@ -17,6 +17,7 @@
 项目目标是工程化支持：
 
 - 对已知漏洞或已知 PoC 进行本地验证。
+- 对一个 advisory 的多个 Git 版本生成本地影响评估证据矩阵。
 - 对开源软件进行候选漏洞挖掘。
 - 记录结构化证据、复现命令、artifact 和 validation 结果。
 - 通过 workbench、batch、schedule 支持人工审查和批量执行。
@@ -45,6 +46,7 @@
 - Evidence: 支持判断的命令输出、sanitizer 输出、traceback、artifact、日志或 metadata。
 - PoC: 用于触发或验证候选的最小输入、命令或 artifact。PoC 默认视为不可信输入。
 - Workbench: 本地人工审查界面或 CLI 工作流，用于查看 runs、findings、evidence、corpus、batch 和 replay 结果。
+- Version impact assessment: 针对一个 advisory 和多个 Git ref/tag 的本地证据矩阵。它可以引用 replay、source signatures 和 public intelligence，但不是 vendor advisory，不改变单个 run 的 FindingStatus。
 
 ## Requirements
 
@@ -56,6 +58,7 @@
 - The project SHOULD prefer source-level workflows before binary-only workflows.
 - The project SHOULD support both interactive workbench usage and batch execution through the same local research kernel.
 - The project MAY integrate external data sources only when sensitive data handling and local persistence semantics are explicit.
+- Version impact assessment MUST keep version-range conclusions in impact reports and MUST NOT rewrite single-target run artifacts into broader claims.
 
 ## 0.1.0 MVP Acceptance
 

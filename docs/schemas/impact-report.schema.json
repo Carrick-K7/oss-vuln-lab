@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oss-vuln-digger.local/schemas/impact-report.schema.json",
+  "title": "oss-vuln-digger Impact Assessment Report",
+  "type": "object",
+  "required": ["impact_id", "created_at", "manifest_ref", "name", "advisory", "versions"],
+  "properties": {
+    "impact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manifest_ref": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "advisory": {
+      "$ref": "#/$defs/advisory"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/version_result"
+      },
+      "default": []
+    },
+    "intel": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/intel_result"
+      },
+      "default": []
+    },
+    "metadata": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "advisory": {
+      "type": "object",
+      "required": ["id", "project", "summary"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vuln_family": {
+          "type": "string",
+          "default": ""
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "source_hints": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "default": []
+        }
+      },
+      "additionalProperties": true
+    },
+    "version_result": {
+      "type": "object",
+      "required": ["version", "ref", "role", "status"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "confirmed_affected",
+            "not_reproduced",
+            "likely_affected",
+            "likely_fixed",
+            "unknown",
+            "not_buildable",
+            "unsupported",
+            "error"
+          ]
+        },
+        "checkout_path": {
+          "type": "string",
+          "default": ""
+        },
+        "run_id": {
+          "type": "string",
+          "default": ""
+        },
+        "run_dir": {
+          "type": "string",
+          "default": ""
+        },
+        "evidence": {
+          "type": "string",
+          "default": ""
+        },
+        "source_matches": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "default": []
+        },
+        "validations": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "default": []
+        },
+        "error": {
+          "type": "string",
+          "default": ""
+        },
+        "metadata": {
+          "type": "object",
+          "default": {}
+        }
+      },
+      "additionalProperties": true
+    },
+    "intel_result": {
+      "type": "object",
+      "required": ["query", "title", "url", "status"],
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "snippet": {
+          "type": "string",
+          "default": ""
+        },
+        "fetched_path": {
+          "type": "string",
+          "default": ""
+        },
+        "sha256": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

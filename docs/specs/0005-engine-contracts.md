@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Stability: evolving
-- Last reviewed: 2026-05-09
-- Applies to: adapters, vuln families, validators, LLM providers, future engines
+- Last reviewed: 2026-05-20
+- Applies to: adapters, vuln families, validators, LLM providers, impact intelligence, future engines
 - Supersedes: none
 
 ## Purpose
@@ -21,6 +21,7 @@
 - future static-analysis engines
 - future fuzzing engines
 - future binary-analysis engines
+- impact intelligence providers and version resolvers
 
 ## Non-Goals
 
@@ -35,6 +36,8 @@
 - Project adapters MUST describe detected language/build context without mutating the target project.
 - Vulnerability family plugins MUST produce candidates as hypotheses, not confirmations.
 - LLM providers MUST be optional and must not be the sole source of confirmed vulnerability claims.
+- Impact intelligence providers MUST return supporting evidence only and MUST NOT produce confirmed vulnerability states.
+- Version resolvers MUST be deterministic for the same manifest and repository state.
 - Future fuzzing engines MUST report campaign metadata, corpus/crash artifacts, deduplication identity and validation linkage before findings become confirmed.
 - Future binary engines MUST distinguish binary-risk surfacing from confirmed exploitability.
 
@@ -53,6 +56,13 @@ A validator evaluates a PoC, replay or finding in a controlled path. It must ret
 ## Provider Contract
 
 An LLM or analysis provider may explain root cause, trigger condition, reachability, input shape, exploit strategy and patch direction. Provider output remains advisory until validator evidence supports it.
+
+## Impact Intelligence Contract
+
+An impact intelligence provider may search a configured JSON endpoint and fetch
+bounded public content into the impact workspace. It returns titles, URLs,
+snippets, hashes, storage paths, and fetch errors as supporting evidence only.
+It must not execute fetched content or classify versions as confirmed affected.
 
 ## Future Engine Contract
 

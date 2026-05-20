@@ -34,6 +34,7 @@ The release trajectory is:
 - Local CVE corpus manifests and `replay` commands for known-PoC verification, including LibTIFF CVE-2022-3598 and protobuf CVE-2025-4565 replays
 - Static local dashboard generation and optional local HTTP serving with inline finding, evidence, corpus, and batch review
 - Batch and scheduled local execution for scan and replay workloads with deduplication and regression comparison
+- Version impact assessment for Git refs/tags with replay-backed evidence, source signatures, and optional public intelligence capture
 - JSON and Markdown run reports under a per-run artifacts directory
 
 ## Repository Layout
@@ -99,6 +100,16 @@ python3 -m oss_vuln_digger schedule run ./schedule.json --iterations 1 --poll-se
 python3 -m oss_vuln_digger schedule show ./schedule.json
 ```
 
+Impact assessment commands:
+
+```bash
+python3 -m oss_vuln_digger impact plan ./impact.json --allow-network
+python3 -m oss_vuln_digger impact assess ./impact.json --allow-network
+python3 -m oss_vuln_digger impact assess ./impact.json --allow-network --execute-generated-poc
+python3 -m oss_vuln_digger impact list
+python3 -m oss_vuln_digger impact show <impact-id>
+```
+
 ## Configuration
 
 Start from `config.example.toml`. The default provider is `local`, which uses deterministic heuristics and does not require network access.
@@ -122,6 +133,9 @@ Key config fields:
 - `app.corpus_dir`: directory containing local CVE replay manifests
 - `app.enabled_validators`: enabled validator names
 - `llm.provider`: `local`, `openai`, or `openai_compatible`
+- `intel.web_search_url`: optional JSON search endpoint for `impact ... --allow-network`
+- `intel.web_search_api_key_env`: environment variable name for the optional search API key
+- `intel.max_fetch_bytes`: maximum bytes stored for each fetched public intelligence page
 
 The default validator set avoids host/direct runtime replay. Enable `host_sanitizer_runtime` or `direct_runtime` only when you intentionally want local host execution of target commands or replay commands.
 
@@ -226,6 +240,82 @@ python3 -m oss_vuln_digger \
 
 Successful validation records a `RecursionError` traceback as `confirmed_known_poc`.
 
+## Version Impact Assessment
+
+`impact` evaluates evidence for one advisory across multiple Git refs or tags.
+It writes reports under `<runs_dir>/impacts/<impact-id>/`:
+
+- `impact.json`: canonical version impact report
+- `impact.md`: human-readable matrix
+- `intel.json`: public intelligence evidence when enabled
+- `workspace/`: cloned repository, checkouts, and fetched untrusted artifacts
+
+Contract references:
+
+- Semantics: [docs/specs/0006-version-impact-assessment.md](./docs/specs/0006-version-impact-assessment.md)
+- Execution safety: [docs/specs/0004-execution-safety.md](./docs/specs/0004-execution-safety.md)
+- Manifest schema: [docs/schemas/impact-manifest.schema.json](./docs/schemas/impact-manifest.schema.json)
+- Report schema: [docs/schemas/impact-report.schema.json](./docs/schemas/impact-report.schema.json)
+- Decision: [docs/decisions/0008-version-impact-assessment.md](./docs/decisions/0008-version-impact-assessment.md)
+
+Example manifest:
+
+```json
+{
+  "schema_version": "0.1",
+  "name": "demo-impact",
+  "advisory": {
+    "id": "CVE-2099-2000",
+    "project": "demo",
+    "summary": "Demo version impact assessment",
+    "vuln_family": "command_execution",
+    "source_hints": [
+      {"file": "app.py", "function_or_sink": "__main__"}
+    ]
+  },
+  "version_source": {
+    "type": "git",
+    "repository": "/path/to/demo.git",
+    "explicit": [
+      {"version": "1.0.0", "ref": "v1.0.0", "role": "suspected_affected"},
+      {"version": "1.0.1", "ref": "v1.0.1", "role": "fixed_control"}
+    ],
+    "discover": {
+      "enabled": true,
+      "include": ["v1.*"],
+      "exclude": ["*rc*", "*beta*"],
+      "limit": 20
+    }
+  },
+  "replay": {"corpus_ref": "CVE-2099-2000"},
+  "intelligence": {
+    "enabled": false,
+    "queries": ["CVE-2099-2000 demo PoC"],
+    "max_results": 10
+  },
+  "source_signatures": [
+    {
+      "name": "vulnerable-marker",
+      "classification": "vulnerable",
+      "file": "app.py",
+      "contains_all": ["VULNERABLE_MARKER"]
+    }
+  ]
+}
+```
+
+Impact statuses are separate from finding statuses. `confirmed_affected`
+requires validator-backed runtime evidence for that version. `not_reproduced`
+means a replay or generated execution ran without confirmation; it does not prove
+the version is unaffected. `likely_affected` and `likely_fixed` are lower
+confidence source/evidence states.
+
+Public intelligence and network Git repositories require `--allow-network`.
+Fetched public pages are size capped, hashed, stored in the impact workspace, and
+treated as untrusted. Discovered PoC material is not executed unless
+`--execute-discovered-poc` is supplied. Generated PoCs are not executed unless
+`--execute-generated-poc` is supplied.
+
 ## Local Dashboard
 
 `ui build` writes a static dashboard under `<runs_dir>/dashboard/index.html` by default. The dashboard summarizes:
@@ -234,6 +324,7 @@ Successful validation records a `RecursionError` traceback as `confirmed_known_p
 - finding, validation, and evidence previews for each run
 - local batch executions
 - batch deduplication and regression comparison summaries
+- version impact assessment matrices
 - local corpus records rendered from `corpus_dir`
 
 `ui serve` serves the local runs directory over HTTP so the dashboard can browse the generated artifacts without introducing a separate backend.

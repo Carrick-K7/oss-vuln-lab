@@ -2,8 +2,8 @@
 
 - Status: accepted
 - Stability: evolving
-- Last reviewed: 2026-05-09
-- Applies to: pipeline, validators, dashboard, batch, schedule, schemas
+- Last reviewed: 2026-05-20
+- Applies to: pipeline, validators, dashboard, batch, schedule, impact, schemas
 - Supersedes: none
 
 ## Purpose
@@ -26,6 +26,7 @@
 - corpus record
 - batch result
 - schedule state
+- impact report
 
 ## Non-Goals
 
@@ -38,6 +39,7 @@
 - Schema validation MUST NOT be treated as proof that a vulnerability exists.
 - LLM-generated analysis MUST be stored as hypothesis or explanatory material unless backed by validator evidence.
 - Batch summaries MUST reference underlying runs instead of replacing them as source of truth.
+- Impact reports MUST keep version impact statuses separate from `FindingStatus` and `ValidationStatus`.
 
 ## Status Semantics
 
@@ -78,6 +80,16 @@ A batch result is an orchestration artifact. It summarizes job outcomes, points 
 
 Schedule state records local execution timing and last batch ids. It is not a durable distributed scheduler contract.
 
+## Impact Semantics
+
+An impact report is a version evidence matrix for one advisory. It may reference
+underlying replay or scan run ids for per-version runtime evidence. It is not the
+canonical source for individual finding evidence and it is not an authoritative
+vendor version advisory.
+
+Impact statuses are defined in `docs/specs/0006-version-impact-assessment.md`.
+They are intentionally separate from `FindingStatus` and `ValidationStatus`.
+
 ## Source of Truth
 
 - `run.json` is the canonical source for one scan or replay run.
@@ -85,6 +97,7 @@ Schedule state records local execution timing and last batch ids. It is not a du
 - `corpus/` manifest 是 curated advisory、version-range 和 replay 元数据的本地 canonical source。
 - Batch results summarize job outcomes and reference run ids; they do not replace underlying runs.
 - Schedule state records timing and last batch ids; it does not replace batch results.
+- `impact.json` is the canonical source for one version impact assessment; it references underlying runs when runtime evidence exists.
 - JSON Schema files under `docs/schemas/` are reference contracts for stable manifest shapes. Runtime validation may be implemented with hand-written validation code unless a future Decision Record makes schema validation mandatory.
 
 ## 0.1.0 MVP Acceptance
@@ -96,6 +109,7 @@ Before tagging `0.1.0`:
 - `not_run` MAY appear as a derived PoC status when no validator executed.
 - Batch job status MUST distinguish completed and failed jobs.
 - Reports and dashboard output MUST not invent stronger status claims than the underlying run data.
+- Impact reports MUST not convert `not_reproduced`, source signatures, public snippets, or advisory roles into confirmed vulnerability claims.
 
 ## Scenarios
 

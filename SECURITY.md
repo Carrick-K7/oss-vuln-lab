@@ -17,6 +17,7 @@ Do not commit:
 - customer, target, or organization-specific attack details
 - credentials, API keys, tokens, or private datasets
 - large downloaded vulnerability feeds or local run artifacts
+- fetched impact-intelligence pages, downloaded public PoCs, or generated impact workspaces
 
 ## What Can Be Committed
 
@@ -36,6 +37,17 @@ For sensitive investigations:
 - keep raw notes and sensitive PoCs outside this repository
 - only upstream generalized lessons, redacted fixtures, and engine improvements
 - avoid naming live targets or unpublished CVEs in committed files
+- keep `impact` workspaces and `intel.json` outputs out of commits unless they are deliberately sanitized fixtures
+
+## Impact Assessment Safety
+
+`impact` manifests may point at remote Git repositories and public search
+results. Treat target repositories, fetched pages, public PoC snippets, generated
+PoCs, and replay artifacts as untrusted.
+
+Network access for impact assessment is explicit through `--allow-network`.
+Discovered PoC material is not executed unless `--execute-discovered-poc` is set,
+and generated PoCs are not executed unless `--execute-generated-poc` is set.
 
 ## Supported Versions
 
