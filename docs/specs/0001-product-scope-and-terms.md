@@ -96,7 +96,7 @@ Then the system must not call it a confirmed vulnerability
 
 ## Compatibility
 
-Existing workflow commands, run artifacts, local dashboard behavior, corpus manifests, batch manifests, and schedule manifests remain valid unless a future Decision Record explicitly changes compatibility. The accepted project rename in Decision Record 0009 makes `oss_vuln_lab` and `ovl` the primary entrypoints while keeping `oss_vuln_digger` and `ovd` as pre-1.0 compatibility aliases.
+Existing workflow commands, run artifacts, local dashboard behavior, corpus manifests, batch manifests, and schedule manifests remain valid unless a future Decision Record explicitly changes compatibility. Decision Records 0009 and 0010 make `oss_vuln_lab` and `ovl` the only supported project entrypoints before the first release tag.
 
 ## Security
 

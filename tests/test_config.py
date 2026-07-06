@@ -14,14 +14,11 @@ class ConfigTests(unittest.TestCase):
         self.assertNotIn("direct_runtime", config.enabled_validators)
         self.assertNotIn("host_sanitizer_runtime", config.enabled_validators)
 
-    def test_intel_api_key_env_uses_new_name_with_legacy_fallback(self) -> None:
-        os.environ["OVD_WEB_SEARCH_API_KEY"] = "legacy-secret"
+    def test_intel_api_key_env_uses_canonical_name(self) -> None:
+        os.environ["OVL_WEB_SEARCH_API_KEY"] = "secret"
         try:
-            self.assertEqual(AppConfig().intel.web_search_api_key, "legacy-secret")
-            os.environ["OVL_WEB_SEARCH_API_KEY"] = "new-secret"
-            self.assertEqual(AppConfig().intel.web_search_api_key, "new-secret")
+            self.assertEqual(AppConfig().intel.web_search_api_key, "secret")
         finally:
-            os.environ.pop("OVD_WEB_SEARCH_API_KEY", None)
             os.environ.pop("OVL_WEB_SEARCH_API_KEY", None)
 
     def test_loads_toml_and_env_key(self) -> None:

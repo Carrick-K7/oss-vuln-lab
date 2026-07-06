@@ -121,9 +121,7 @@ Then displayed status names must match the data semantics spec
 
 CLI commands documented in `README.md` are treated as supported entrypoints. Behavior-changing command changes require a Decision Record when they alter persisted output, result semantics or safety boundaries.
 
-The primary project entrypoints are `python3 -m oss_vuln_lab` and `ovl`.
-`python3 -m oss_vuln_digger` and `ovd` are compatibility aliases retained for
-the pre-1.0 rename from `oss-vuln-digger` to `oss-vuln-lab`.
+The supported project entrypoints are `python3 -m oss_vuln_lab` and `ovl`.
 
 ## Security
 

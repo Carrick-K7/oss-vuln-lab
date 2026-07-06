@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_ROOT="${1:-$ROOT_DIR/.targets}"
-RUNS_DIR="${OVL_RUNS_DIR:-${OVD_RUNS_DIR:-$ROOT_DIR/.ovl_runs}}"
+RUNS_DIR="${OVL_RUNS_DIR:-$ROOT_DIR/.ovl_runs}"
 mkdir -p "$TARGET_ROOT"
 IMPACT_REPO="$(mktemp -d "$TARGET_ROOT/zlib-cve-2022-37434-git.XXXXXX")"
 MANIFEST="$ROOT_DIR/examples/impact/zlib-cve-2022-37434.json"

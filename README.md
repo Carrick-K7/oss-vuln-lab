@@ -84,8 +84,6 @@ The installed console script is also available as:
 ovl scan /path/to/project
 ```
 
-`ovd` remains available as a pre-1.0 compatibility alias.
-
 Local UI commands:
 
 ```bash
@@ -141,9 +139,7 @@ Key config fields:
 - `intel.web_search_api_key_env`: environment variable name for the optional search API key; default is `OVL_WEB_SEARCH_API_KEY`
 - `intel.max_fetch_bytes`: maximum bytes stored for each fetched public intelligence page
 
-For the pre-1.0 rename, `OVD_WEB_SEARCH_API_KEY` remains a fallback when the
-default `OVL_WEB_SEARCH_API_KEY` is not set. The real impact example scripts
-also accept legacy `OVD_RUNS_DIR` when `OVL_RUNS_DIR` is unset.
+The real impact example scripts also use `OVL_RUNS_DIR` when set.
 
 The default validator set avoids host/direct runtime replay. Enable `host_sanitizer_runtime` or `direct_runtime` only when you intentionally want local host execution of target commands or replay commands.
 

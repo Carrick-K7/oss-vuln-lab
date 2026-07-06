@@ -11,7 +11,6 @@ requires-python = ">=3.12"
 
 [project.scripts]
 ovl = "oss_vuln_lab.cli:main"
-ovd = "oss_vuln_lab.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -31,12 +31,7 @@ class IntelConfig:
 
     @property
     def web_search_api_key(self) -> str:
-        configured = os.environ.get(self.web_search_api_key_env, "")
-        if configured:
-            return configured
-        if self.web_search_api_key_env == "OVL_WEB_SEARCH_API_KEY":
-            return os.environ.get("OVD_WEB_SEARCH_API_KEY", "")
-        return ""
+        return os.environ.get(self.web_search_api_key_env, "")
 
 
 @dataclass(slots=True)
