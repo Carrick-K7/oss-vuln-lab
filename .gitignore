@@ -10,6 +10,7 @@
 .libtiff_runs_v3/
 .libtiff_runs_v4/
 .ovd_runs/
+.ovl_runs/
 .pytest_cache/
 .targets/
 .tmp_runs_smoke/
